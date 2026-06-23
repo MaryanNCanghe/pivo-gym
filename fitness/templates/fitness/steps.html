@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}Steps | PIVO{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/steps.css' %}">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Chart global available?', typeof window.Chart !== 'undefined');
+    });
+  </script>
+
+  <script src="{% static 'js/steps.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+<section class="page-hero mb-4">
+  <h1 class="title">Steps</h1>
+  <p class="subtitle">Daily movement insights and goals.</p>
+</section>
+
+<section class="section">
+  <h3 class="card-title">Today</h3>
+
+  <div class="steps-display my-2">
+    <span id="steps-count" class="steps-number"
+          data-steps="{{ steps_today|default:0 }}"
+          data-goal="{{ steps_goal|default:10000 }}">0</span>
+    <span class="steps-unit">steps</span>
+  </div>
+
+  <div class="progress pivo-progress">
+    <div id="steps-progress" class="progress-bar"></div>
+  </div>
+
+  <div class="d-flex justify-content-between mt-1">
+    <small class="text-muted-pivo">0</small>
+    <small class="text-muted-pivo" id="steps-goal-end">0</small>
+  </div>
+</section>
+
+<section class="section">
+  <form id="stepsGoalForm" class="goal-inline mt-3">
+    <label class="form-label m-0">Set goal:</label>
+    <input class="form-control" type="text" name="goal" min="1000" step="500"
+           placeholder="e.g., 10000" style="max-width: 160px;">
+    <button class="btn btn-outline-min" type="submit">Save</button>
+  </form>
+
+  <small class="text-muted-pivo d-block mt-1">
+    Current goal: <strong id="stepsGoalOut">0</strong>
+  </small>
+</section>
+{% endblock %}

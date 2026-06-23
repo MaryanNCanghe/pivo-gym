@@ -1,0 +1,144 @@
+/* =========================
+   PIVO — Profile page
+   ========================= */
+
+.kv {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: .75rem 1rem;
+}
+.kv .key { color: var(--muted); }
+.kv .val { color: var(--pebble); font-weight: 600; }
+
+/* ---------- Profile header ---------- */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.avatar-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatar-circle {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-placeholder {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--olive);
+  color: var(--ivory);
+  font-size: 2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .2s;
+  border-radius: 50%;
+}
+
+.avatar-wrap:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.profile-username {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 .25rem;
+}
+
+/* ---------- Progress photo grid ---------- */
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: .75rem;
+}
+
+.progress-card {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--oat);
+}
+
+.progress-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+
+.progress-card-info {
+  padding: .4rem .5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+
+.progress-card-info .date {
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--pebble);
+}
+
+.progress-card-info .note {
+  font-size: .72rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.delete-form {
+  position: absolute;
+  top: .35rem;
+  right: .35rem;
+}
+
+.delete-btn {
+  background: rgba(0,0,0,.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: .9rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.delete-btn:hover {
+  background: rgba(200,40,40,.8);
+}

@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Meals | PIVO{% endblock %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/meals.css' %}">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="{% static 'js/meals.js' %}" defer></script>
+
+{% endblock %}
+
+{% block body %}
+
+<section class="section">
+  <div class="d-flex" style="justify-content:space-between;align-items:center;">
+    <div>
+      <h1 class="card-title">Meals</h1>
+      <p class="text-muted-pivo">Daily nutrition tracking</p>
+    </div>
+
+    <div class="pivo-calendar">
+      <button id="prevDay">‹</button>
+      <input id="datePicker" type="date">
+      <button id="nextDay">›</button>
+    </div>
+  </div>
+
+  <div id="macroGoals" class="mt-3">
+    <label class="chip">Calories <input id="goal-cal" type="text"> kcal</label>
+    <label class="chip">Protein <input id="goal-pro" type="text"> g</label>
+    <label class="chip">Carbs <input id="goal-carb" type="text"> g</label>
+    <label class="chip">Fat <input id="goal-fat" type="text"> g</label>
+
+    <button id="save-goals" class="btn-primary-min">Save</button>
+    <span id="goals-saved" class="text-muted-pivo" hidden>Saved ✓</span>
+  </div>
+</section>
+
+<section class="section">
+  <h3 class="card-title">Today</h3>
+
+  <div class="chart-box">
+
+  <canvas id="macrosChart" width="220" height="220"></canvas>
+
+  <div class="donut-center">
+      <strong id="calories-left">0</strong>
+      <span class="text-muted-pivo">kcal left</span>
+  </div>
+
+</div>
+  <div class="macro-remaining">
+    <div class="macro-row protein"><span>Protein</span><div class="bar"><div></div></div><small id="pro-left">0g</small></div>
+    <div class="macro-row carbs"><span>Carbs</span><div class="bar"><div></div></div><small id="carb-left">0g</small></div>
+    <div class="macro-row fat"><span>Fat</span><div class="bar"><div></div></div><small id="fat-left">0g</small></div>
+  </div>
+
+</section>
+
+<section class="section">
+  <h3 class="card-title">Search Food</h3>
+  <div class="d-flex" style="gap:.5rem;">
+    <div style="position:relative;flex:1;min-width:0;">
+      <input id="foodSearchInput" class="form-control" placeholder="Search food (e.g. chicken breast)" autocomplete="off">
+      <div id="searchDropdown" class="search-dropdown" hidden></div>
+    </div>
+    <button id="foodSearchBtn" class="btn-primary-min scan-icon-btn" title="Search food">&#128269;</button>
+    <button id="scanBtn" class="btn-outline-min scan-icon-btn" title="Scan food photo">📷</button>
+  </div>
+  <input id="scanFileInput" type="file" accept="image/*" hidden>
+
+  <div id="scanPreview" hidden style="margin-top:1rem;">
+    <img id="scanThumb" style="max-width:120px;border-radius:8px;display:block;margin-bottom:.75rem;">
+    <div id="scanSpinner" class="text-muted-pivo" hidden>Analyzing…</div>
+    <div id="scanResult" hidden>
+      <p id="scanResultName" style="font-weight:600;margin-bottom:.3rem;"></p>
+      <p id="scanResultMacros" class="text-muted-pivo" style="font-size:.85rem;margin-bottom:.75rem;"></p>
+      <div style="display:flex;gap:.5rem;">
+        <button id="scanLogBtn" class="btn-primary-min">Log Meal</button>
+        <button id="scanRescanBtn" class="btn-outline-min">Re-scan</button>
+      </div>
+    </div>
+  </div>
+
+  <ul id="foodSearchResults" class="food-results mt-2"></ul>
+</section>
+
+<section class="section">
+  <h3 class="card-title">Quick Add Meal</h3>
+
+  <form id="quickMealForm" class="quick-meal-form">
+    <input class="form-control quick-meal-name" name="name" placeholder="Meal name" required>
+    <div class="quick-meal-macros">
+      <input class="form-control" name="calories" type="text" placeholder="kcal" required>
+      <input class="form-control" name="protein" type="text" placeholder="Protein" required>
+      <input class="form-control" name="carbs" type="text" placeholder="Carbs" required>
+      <input class="form-control" name="fat" type="text" placeholder="Fat" required>
+    </div>
+    <button class="btn-primary-min quick-meal-submit">Add</button>
+  </form>
+</section>
+
+<section class="section">
+  <div class="d-flex" style="justify-content:space-between;align-items:center;">
+    <h3 class="card-title">Meals Logged</h3>
+    <button id="resetDayBtn" class="btn-outline-min">Reset day</button>
+  </div>
+
+  <table class="table-pivo mt-3">
+    <thead>
+      <tr><th>Meal</th><th>kcal</th><th>P</th><th>C</th><th>F</th></tr>
+    </thead>
+    <tbody id="mealsTable">
+      <tr><td colspan="5" class="text-muted-pivo text-center">No meals logged</td></tr>
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}

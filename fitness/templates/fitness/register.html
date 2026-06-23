@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Register | Pivo{% endblock %}
+
+{% block body %}
+<div class="fullpage-bg" style="background-image: url('{% static 'images/login-image.jpg' %}');">  <div class="form-container card-pivo">
+
+    <h2 class="card-title mb-3">Create your account</h2>
+
+    {% if message %}
+      <div class="alert-pivo mb-3">{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'register' %}" method="post" class="d-grid">
+      {% csrf_token %}
+
+      <div>
+        <label class="form-label">Username</label>
+        <input class="form-control" name="username" placeholder="yourname" required>
+      </div>
+
+      <div>
+        <label class="form-label">Email</label>
+        <input class="form-control" type="email" name="email" placeholder="you@example.com" required>
+      </div>
+
+      <div>
+        <label class="form-label">Password</label>
+        <input class="form-control" type="password" name="password" placeholder="••••••••" required>
+      </div>
+
+      <div>
+        <label class="form-label">Confirm Password</label>
+        <input class="form-control" type="password" name="confirmation" placeholder="••••••••" required>
+      </div>
+
+      <div class="d-flex justify-content-between mt-2">
+        <a class="btn-outline-min" href="{% url 'login' %}">Login</a>
+        <button class="btn-primary-min" type="submit">Register</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

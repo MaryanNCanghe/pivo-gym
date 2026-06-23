@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Create Workout — PIVO{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/workouts.css' %}">
+<script src="{% static 'js/add-workout.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+
+<section class="container">
+
+  <header class="page-header">
+    <h2>Create Workout</h2>
+
+    <a href="/exercise-list/" class="btn btn-outline-min">
+      Exercise Library
+    </a>
+  </header>
+
+  <div class="card">
+
+    <label>Workout name</label>
+    <input id="workout-name" placeholder="Push Day">
+
+    <label>Days</label>
+    <div class="day-picker">
+      {% for d in days %}
+      <button
+        type="button"
+        class="day-btn"
+        data-day="{{ d }}"
+      >
+        {{ d }}
+      </button>
+      {% endfor %}
+    </div>
+
+    <hr>
+
+    <h5>Add exercises</h5>
+
+    <input
+      id="exercise-search"
+      placeholder="Search exercise…"
+    >
+
+    <div id="exercise-results"></div>
+
+    <hr>
+
+    <h5>Workout exercises</h5>
+
+    <ul id="selected-exercises"></ul>
+
+    <button
+      class="btn-primary-min"
+      id="save-workout-btn"
+      type="button"
+    >
+      Save workout
+    </button>
+
+  </div>
+</section>
+
+<div id="media-modal" class="media-modal hidden">
+
+  <div class="media-backdrop"></div>
+
+  <div class="media-content">
+
+    <button id="close-media" class="media-close-btn">
+    X
+    </button>
+
+    <div id="media-container"></div>
+
+  </div>
+
+</div>
+
+{% endblock %}

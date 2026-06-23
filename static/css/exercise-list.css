@@ -1,0 +1,204 @@
+/* =========================
+   EXERCISE LIBRARY (PIVO)
+   ========================= */
+
+/* ✅ SEARCH BAR */
+
+.page-header {
+  margin-bottom: 24px;  /* ✅ stronger separation */
+}
+
+
+.search-row {
+
+  width: 100%;
+  margin-bottom: 24px;
+  
+  margin-top: 18px;     
+
+
+  display: grid;
+  grid-template-columns: 1fr 180px 180px auto;
+  gap: 14px;
+}
+
+.search-row input,
+.search-row select {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.search-row button {
+  height: 42px;
+  padding: 0 18px;
+  background: var(--olive);
+  color: #fff;
+  border-radius: 10px;
+}
+
+/* ✅ GRID */
+
+#exercise-results {
+  width: 100%;
+}
+
+.exercise-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+
+  gap: 20px;
+}
+
+/* ✅ CARD */
+
+.exercise-card {
+  display: flex;
+  flex-direction: column;
+
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.exercise-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ✅ MEDIA */
+
+.exercise-media {
+  height: 170px;
+  background: #f4f5f6;
+}
+
+.exercise-media img,
+.exercise-media video {
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+}
+
+
+.exercise-media {
+  aspect-ratio: 3 / 4;  
+  height: auto;
+}
+
+/* ✅ CONTENT */
+
+.card-body {
+  padding: 14px;
+}
+
+.card-body h6 {
+  font-weight: 800;
+}
+
+.exercise-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.exercise-tags span {
+  background: var(--oat);
+  font-size: 0.7rem;
+  padding: 3px 6px;
+  border-radius: 6px;
+}
+
+
+/* =========================
+   FULLSCREEN MODAL
+   ========================= */
+
+.fullscreen-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.fullscreen-modal.hidden {
+  display: none;
+}
+
+/* ✅ MEDIA TAKES FULL SCREEN */
+#exercise-full img,
+#exercise-full video {
+  max-width: 100%;
+  max-height: 100%;
+
+  object-fit: contain;
+}
+
+/* =========================
+   FULLSCREEN CLOSE BUTTON
+   ========================= */
+
+.fullscreen-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  z-index: 10;
+
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: 0.2s;
+}
+
+.fullscreen-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1);
+}
+
+
+
+
+
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 640px) {
+  .search-row {
+    grid-template-columns: 1fr;
+  }
+
+  .search-row button {
+    width: 100%;
+  }
+}

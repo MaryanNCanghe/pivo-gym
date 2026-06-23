@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Exercise Library — PIVO{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/exercise-list.css' %}">
+<script src="{% static 'js/exercise-list.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+
+
+<section class="container">
+
+
+<header class="page-header">
+
+  <a href="/workouts/" class="back-link">
+    ← Back
+  </a>
+
+</header>
+
+  <div id="workout-list"></div>
+
+</section>
+
+<section class="container">
+
+
+  <form id="exercise-search-form" class="search-row">
+
+    <input name="q" placeholder="Search…" />
+
+    <select name="bodyPart">
+      <option value="">All body parts</option>
+      <option value="arms">Arms</option>
+      <option value="legs">Legs</option>
+      <option value="chest">Chest</option>
+      <option value="back">Back</option>
+      <option value="abdomen">Abdomen</option>
+    </select>
+
+    <select name="equipment">
+      <option value="">Any equipment</option>
+      <option value="barbell">Barbell</option>
+      <option value="dumbbell">Dumbbell</option>
+      <option value="cable">Cable</option>
+    </select>
+
+    <button type="submit" class="btn-primary">
+      Search
+    </button>
+
+  </form>
+
+  <div id="exercise-results"></div>
+
+</section>
+
+<div id="exercise-modal" class="fullscreen-modal hidden">
+
+  <button id="close-exercise" class="fullscreen-close">✕</button>
+
+  <div id="exercise-full"></div>
+
+</div>
+
+{% endblock %}

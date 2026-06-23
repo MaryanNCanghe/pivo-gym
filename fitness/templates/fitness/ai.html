@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}AI Suggestions | PIVO{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/ai.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{% static 'js/ai.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+<section class="page-hero mb-4">
+  <h1 class="title">AI Suggestions</h1>
+  <p class="subtitle">Ask for workouts, meals, or recovery advice.</p>
+</section>
+
+<section class="ai-box">
+  <div id="aiChat" class="chat">
+    <div id="aiOutput" class="chat-messages"></div>
+  </div>
+
+  <form id="aiForm" class="chat-input">
+    <label for="prompt" class="form-label visually-hidden">Prompt</label>
+
+    <textarea
+      id="prompt"
+      name="prompt"
+      class="form-control"
+      rows="2"
+      placeholder="e.g., I have 30 minutes and dumbbells - suggest a workout."
+      required
+    ></textarea>
+
+    <div class="chat-actions">
+      <button type="submit" class="btn btn-primary-min ">Send</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

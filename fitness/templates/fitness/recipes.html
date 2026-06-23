@@ -1,0 +1,192 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}Recipes | PIVO{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/recipes.css' %}">
+<script src="{% static 'js/recipes.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+
+<section class="section">
+  <div class="d-flex" style="justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem;">
+    <div>
+      <h1 class="card-title">Recipes</h1>
+      <p class="text-muted-pivo">Meals organised by your fitness goal.</p>
+    </div>
+  </div>
+
+  <div class="recipe-filters mt-3" id="goalFilters">
+    <button class="filter-btn active" data-filter="goal" data-value="all">All Goals</button>
+    <button class="filter-btn" data-filter="goal" data-value="lose">Lose Weight</button>
+    <button class="filter-btn" data-filter="goal" data-value="maintain">Maintain</button>
+    <button class="filter-btn" data-filter="goal" data-value="gain">Gain Weight</button>
+  </div>
+
+  <div class="recipe-filters mt-2" id="mealFilters">
+    <button class="filter-btn active" data-filter="meal" data-value="all">All Meals</button>
+    <button class="filter-btn" data-filter="meal" data-value="breakfast">Breakfast</button>
+    <button class="filter-btn" data-filter="meal" data-value="lunch">Lunch</button>
+    <button class="filter-btn" data-filter="meal" data-value="dinner">Dinner</button>
+    <button class="filter-btn" data-filter="meal" data-value="snack">Snack</button>
+    <button class="filter-btn" data-filter="meal" data-value="pre_training">Pre-Training</button>
+    <button class="filter-btn" data-filter="meal" data-value="post_training">Post-Training</button>
+  </div>
+
+  <div class="recipe-grid mt-3" id="defaultGrid">
+    {% for r in default_recipes %}
+    <div class="recipe-card" data-goal="{{ r.goal }}" data-meal="{{ r.meal_type }}">
+      {% if r.image %}
+        <img src="{{ r.image.url }}" alt="{{ r.name }}">
+      {% else %}
+        <div class="recipe-placeholder-img">🍽</div>
+      {% endif %}
+      <div class="recipe-card-body">
+        <div class="recipe-badges">
+          {% if r.goal %}
+            <span class="goal-badge goal-{{ r.goal }}">{{ r.get_goal_display }}</span>
+          {% endif %}
+          <span class="meal-badge">{{ r.get_meal_type_display }}</span>
+        </div>
+        <h4 class="recipe-name">{{ r.name }}</h4>
+        {% if r.description %}
+          <p class="recipe-desc text-muted-pivo">{{ r.description }}</p>
+        {% endif %}
+        <div class="recipe-macros">
+          <span>{{ r.calories }} kcal</span>
+          <span>P {{ r.protein_g }}g</span>
+          <span>C {{ r.carbs_g }}g</span>
+          <span>F {{ r.fat_g }}g</span>
+        </div>
+        <button class="expand-btn btn-outline-min mt-2" type="button">See recipe ›</button>
+      </div>
+      <div class="recipe-expand" hidden>
+        {% if r.ingredients %}
+          <h5 class="expand-heading">Ingredients</h5>
+          <ul class="expand-list">
+            {% for line in r.ingredients.splitlines %}
+              {% if line %}<li>{{ line }}</li>{% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% if r.instructions %}
+          <h5 class="expand-heading">Instructions</h5>
+          <p class="expand-text">{{ r.instructions|linebreaksbr }}</p>
+        {% endif %}
+      </div>
+    </div>
+    {% empty %}
+      <p class="text-muted-pivo">No default recipes found.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="d-flex" style="justify-content:space-between;align-items:center;margin-bottom:1rem;">
+    <div>
+      <h3 class="card-title">My Recipe Book</h3>
+      <p class="text-muted-pivo" style="font-size:.85rem;">Save your own favourite recipes.</p>
+    </div>
+    <button class="btn-primary-min" id="addRecipeToggle">＋ Add Recipe</button>
+  </div>
+
+  <form id="addRecipeForm" method="post" enctype="multipart/form-data"
+        action="{% url 'add_recipe' %}" hidden>
+    {% csrf_token %}
+    <div class="add-recipe-grid">
+      <input class="form-control" name="name" placeholder="Recipe name" required>
+
+      <select class="form-control" name="goal">
+        <option value="">Any goal</option>
+        <option value="lose">Lose Weight</option>
+        <option value="maintain">Maintain</option>
+        <option value="gain">Gain Weight</option>
+      </select>
+
+      <select class="form-control" name="meal_type" required>
+        <option value="breakfast">Breakfast</option>
+        <option value="lunch">Lunch</option>
+        <option value="dinner">Dinner</option>
+        <option value="snack">Snack</option>
+        <option value="pre_training">Pre-Training</option>
+        <option value="post_training">Post-Training</option>
+      </select>
+
+      <input class="form-control" type="file" name="image" accept="image/*">
+    </div>
+
+    <textarea class="form-control mt-2" name="description" placeholder="Short description" rows="2"></textarea>
+    <textarea class="form-control mt-2" name="ingredients" placeholder="Ingredients (one per line)" rows="4" required></textarea>
+    <textarea class="form-control mt-2" name="instructions" placeholder="Instructions" rows="4"></textarea>
+
+    <div class="add-recipe-macros mt-2">
+      <input class="form-control" name="calories" type="number" placeholder="kcal" min="0">
+      <input class="form-control" name="protein_g" type="number" placeholder="Protein g" min="0" step="0.1">
+      <input class="form-control" name="carbs_g" type="number" placeholder="Carbs g" min="0" step="0.1">
+      <input class="form-control" name="fat_g" type="number" placeholder="Fat g" min="0" step="0.1">
+    </div>
+
+    <div style="margin-top:.75rem;display:flex;gap:.5rem;">
+      <button type="submit" class="btn-primary-min">Save Recipe</button>
+      <button type="button" class="btn-outline-min" id="addRecipeCancel">Cancel</button>
+    </div>
+  </form>
+
+  {% if user_recipes %}
+    <div class="recipe-grid mt-3">
+      {% for r in user_recipes %}
+      <div class="recipe-card" data-goal="{{ r.goal }}" data-meal="{{ r.meal_type }}">
+        {% if r.image %}
+          <img src="{{ r.image.url }}" alt="{{ r.name }}">
+        {% else %}
+          <div class="recipe-placeholder-img">🍽</div>
+        {% endif %}
+        <div class="recipe-card-body">
+          <div class="recipe-badges">
+            {% if r.goal %}
+              <span class="goal-badge goal-{{ r.goal }}">{{ r.get_goal_display }}</span>
+            {% endif %}
+            <span class="meal-badge">{{ r.get_meal_type_display }}</span>
+          </div>
+          <h4 class="recipe-name">{{ r.name }}</h4>
+          {% if r.description %}
+            <p class="recipe-desc text-muted-pivo">{{ r.description }}</p>
+          {% endif %}
+          <div class="recipe-macros">
+            {% if r.calories %}<span>{{ r.calories }} kcal</span>{% endif %}
+            {% if r.protein_g %}<span>P {{ r.protein_g }}g</span>{% endif %}
+            {% if r.carbs_g %}<span>C {{ r.carbs_g }}g</span>{% endif %}
+            {% if r.fat_g %}<span>F {{ r.fat_g }}g</span>{% endif %}
+          </div>
+          <button class="expand-btn btn-outline-min mt-2" type="button">See recipe ›</button>
+        </div>
+        <div class="recipe-expand" hidden>
+          {% if r.ingredients %}
+            <h5 class="expand-heading">Ingredients</h5>
+            <ul class="expand-list">
+              {% for line in r.ingredients.splitlines %}
+                {% if line %}<li>{{ line }}</li>{% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if r.instructions %}
+            <h5 class="expand-heading">Instructions</h5>
+            <p class="expand-text">{{ r.instructions|linebreaksbr }}</p>
+          {% endif %}
+        </div>
+        <form method="post" action="{% url 'delete_recipe' r.pk %}" class="user-recipe-delete">
+          {% csrf_token %}
+          <button type="submit" class="delete-recipe-btn" title="Delete recipe">&times;</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted-pivo text-center" style="padding:2rem 0;">
+      Your recipe book is empty, add your first recipe above.
+    </p>
+  {% endif %}
+</section>
+
+{% endblock %}

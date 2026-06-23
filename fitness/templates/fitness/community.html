@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Community | PIVO{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/community.css' %}">
+<script src="{% static 'js/community.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="comm-header section">
+  <h1 class="card-title">Community</h1>
+  <p class="text-muted-pivo">Share your fitness journey with others</p>
+</div>
+
+<!-- Create post -->
+<div class="section comm-compose">
+  <div class="comm-compose-top">
+    <div id="composeAvatar" class="comm-avatar"></div>
+    <textarea id="postContent" class="comm-textarea" placeholder="What's on your mind?" rows="2"></textarea>
+  </div>
+
+  <div id="imagePreviewWrap" hidden>
+    <div class="comm-image-preview">
+      <img id="imagePreviewImg" src="" alt="preview">
+      <button id="removeImageBtn" class="comm-remove-img" title="Remove">✕</button>
+    </div>
+  </div>
+
+  <div class="comm-compose-actions">
+    <label class="comm-photo-btn" title="Add photo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Photo
+      <input id="postImageInput" type="file" accept="image/*" hidden>
+    </label>
+    <button id="postSubmitBtn" class="btn-primary-min comm-post-btn">Post</button>
+  </div>
+</div>
+
+<!-- Feed -->
+<div id="feed"></div>
+
+<div id="feedEnd" class="comm-feed-end" hidden>
+  <button id="loadMoreBtn" class="btn-outline-min">Load more</button>
+</div>
+
+<div id="feedEmpty" class="comm-empty" hidden>
+  <p>No posts yet. Be the first to share something!</p>
+</div>
+
+{% endblock %}

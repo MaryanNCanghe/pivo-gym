@@ -1,0 +1,1004 @@
+
+
+/* =========================
+   PIVO — Workouts (FINAL CLEAN)
+   ========================= */
+
+/* =========================
+   Layout
+   ========================= */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.page-header .logo {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--pebble);
+}
+
+/* =========================
+   Cards Grid
+   ========================= */
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+@media (min-width: 768px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* =========================
+   Cards (aligned with Meals)
+   ========================= */
+
+.card,
+.form-card,
+.wo-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  padding: 1.25rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+}
+
+
+.card:hover,
+.wo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+
+.card h3,
+.card h5 {
+  font-weight: 800;
+  color: var(--pebble);
+  margin-bottom: .5rem;
+}
+
+.card p {
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+/* =========================
+   Inputs (Replace Bootstrap)
+   ========================= */
+
+.form-control,
+#workout-name,
+#exercise-search {
+  width: 100%;
+  padding: .5rem .65rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: .9rem;
+}
+
+/* =========================
+   Buttons
+   ========================= */
+
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-outline-min {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .5rem .9rem;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: var(--olive);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--fern);
+}
+
+.btn-secondary {
+  background: #fff;
+  border-color: var(--border);
+  color: var(--olive);
+}
+
+.btn-secondary:hover {
+  background: var(--oat);
+}
+
+
+
+/* =========================
+   Day Picker
+   ========================= */ .day-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.day-btn {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .15s;
+}
+
+.day-btn:hover {
+  background: var(--oat);
+}
+
+.day-btn.active {
+  background: #e91e8c;
+  border-color: #e91e8c;
+  color: #fff;
+}
+
+/* =========================
+   Exercise Results GRID 
+   ========================= */
+
+#exercise-results {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  #exercise-results {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  #exercise-results {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* =========================
+   Exercise Cards
+   ========================= */
+
+.exercise-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.exercise-media {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff5f9;
+}
+
+.exercise-media img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.exercise-card h6 {
+  padding: 0.6rem 0.9rem;
+  font-weight: 800;
+  color: var(--pebble);
+}
+
+/* =========================
+   Add Button (+)
+   ========================= */
+
+.add-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: #e91e8c;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: .15s;
+}
+
+.add-btn:hover {
+  background: #c2185b;
+  transform: scale(1.05);
+}
+
+/* =========================
+   Selected Exercises (replaces list-group-item)
+   ========================= */
+
+#selected-exercises {
+  padding: 0;
+  margin-top: 1rem;
+  list-style: none;
+}
+
+.exercise-item {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Header */
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Actions */
+.exercise-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* =========================
+   Sets UI
+   ========================= */
+
+.exercise-sets {
+  margin-top: 8px;
+}
+
+.exercise-sets li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.exercise-sets input {
+  width: 55px;
+  padding: 3px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+/* Remove set button */
+.exercise-sets button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #999;
+}
+
+.exercise-sets button:hover {
+  color: #000;
+}
+
+/* =========================
+   Timer
+   ========================= */
+
+.session-timer,
+#timerDisplay,
+#timer-display {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--olive);
+}
+
+/* =========================
+   Media Modal
+   ========================= */
+
+.media-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.media-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.media-content {
+  position: relative;
+  background: #fff;
+  border-radius: 14px;
+  padding: 1rem;
+  z-index: 2;
+  width: 90%;
+  max-width: 500px;
+}
+
+.media-content button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+/* =========================
+   Save Button
+   ========================= */
+
+#save-workout-btn {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* =========================
+   Fix Set Row ✕ Button
+   ========================= */
+
+.exercise-sets li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* =========================
+   RED ✕ BUTTON (SETS)
+   ========================= */
+
+.exercise-sets button {
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: none;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  color: #e54848;   /* ✅ soft red */
+  cursor: pointer;
+
+  border-radius: 50%;
+  transition: all 0.15s ease;
+}
+
+/* =========================
+   MEDIA MODAL (PIVO STYLE)
+   ========================= */ 
+.media-modal {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1000;
+}
+
+/* ✅ hidden state (replaces d-none) */
+.media-modal.hidden {
+  display: none;
+}
+
+/* ✅ backdrop */
+.media-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* ✅ modal box */
+.media-content {
+  position: relative;
+
+  background: #fff;
+  border-radius: 16px;
+  padding: 1rem;
+
+  width: 90%;
+  max-width: 520px;
+
+  box-shadow: var(--shadow-soft);
+  z-index: 2;
+}
+
+/* ✅ media inside */
+#media-container img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* ✅ CLOSE BUTTON (RED ✕) */
+.media-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 32px;
+  height: 32px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(229, 72, 72, 0.12);
+  color: #e54848;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.media-close-btn:hover {
+  background: rgba(229, 72, 72, 0.2);
+  color: #c53030;
+  transform: scale(1.1);
+}
+
+.btn-outline-min {
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.btn-outline-min:hover {
+  background: var(--oat);
+}
+/* =========================
+   WORKOUT EXERCISES SECTION
+   ========================= */
+
+#selected-exercises {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ✅ Each exercise card */
+.exercise-item {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* ✅ Exercise title */
+.exercise-item strong {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--pebble);
+  margin-bottom: 4px;
+}
+
+/* ✅ Preview text */
+.exercise-item small,
+.exercise-item span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* =========================
+   HEADER ROW
+   ========================= */
+
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* =========================
+   BUTTON ROW
+   ========================= */
+
+.exercise-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ✅ Preview button */
+.exercise-actions button {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.exercise-actions button:hover {
+  color: var(--pebble);
+}
+
+/* ✅ ADD SET BUTTON */
+.add-set-btn {
+  display: block;
+  width: 100%;
+
+  margin-top: 10px;
+
+  background: #9c27b0;
+  color: #fff;
+
+  border-radius: 10px;
+  border: none;
+
+  padding: 6px 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.add-set-btn:hover {
+  background: #7b1fa2;
+}
+
+/* =========================
+   SET LIST
+   ========================= */
+
+.exercise-sets {
+  margin-top: 10px;
+  padding-left: 12px;
+}
+
+/* ✅ Each set row */
+.exercise-sets li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+/* ✅ Inputs */
+.exercise-sets input {
+  width: 50px;
+  padding: 3px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* ✅ Text (reps/kg) */
+.exercise-sets span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+
+/* =========================
+   WORKOUT VIEW MODE
+   ========================= */
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+/* Manage cards */
+.workout-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+
+  margin-bottom: 10px;
+}
+
+.workout-info h4 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.workout-info span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* Actions */
+.workout-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-delete {
+  border: none;
+  background: rgba(229, 72, 72, 0.1);
+  color: #e54848;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background: rgba(229, 72, 72, 0.2);
+}
+
+/* -------------------------
+   VIEW ONLY CARDS
+-------------------------- */
+
+.workout-view-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.workout-view-card h4 {
+  margin-bottom: 8px;
+}
+
+/* Days pills */
+.workout-days {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.day-pill {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--oat);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+/* =========================
+   VIEW BUTTON
+   ========================= */
+
+.btn-view {
+  border: none;
+  background: rgba(156, 39, 176, 0.1);
+  color: #9c27b0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-view:hover {
+  background: rgba(156, 39, 176, 0.2);
+}
+
+/* =========================
+   EXPAND AREA (FIXED)
+   ========================= */
+
+.workout-expand {
+  display: none;
+  width: 100%;
+}
+
+.workout-expand.open {
+  display: block;
+}
+
+/* =========================
+   INNER CONTENT
+   ========================= */
+
+.workout-details {
+  border-top: 1px solid var(--border);
+  margin-top: 12px;
+  padding-top: 12px;
+
+  text-align: left; /* ✅ FIX CENTERING ISSUE */
+}
+
+/* Each exercise */
+.exercise-row {
+  margin-bottom: 12px;
+}
+
+/* Exercise name */
+.exercise-row strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Sets */
+.exercise-sets-view {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Pills */
+.set-pill {
+  background: var(--oat);
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+/* =========================
+   FIX WORKOUT LAYOUT (FINAL)
+   ========================= */
+
+.workout-card {
+  display: block !important;        /* ✅ KILLS flex completely */
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* TOP ROW */
+.workout-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ACTIONS */
+.workout-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* EXPAND AREA */
+.workout-expand {
+  display: none;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.workout-expand.open {
+  display: block;
+}
+
+/* CONTENT */
+.workout-details {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+/* FORCE FULL WIDTH + LEFT ALIGN */
+.workout-details,
+.exercise-row {
+  width: 100%;
+  text-align: left;
+}
+
+/* EXERCISE BLOCK */
+/* =========================
+   DIVIDER BETWEEN EXERCISES
+   ========================= */
+
+.exercise-row {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ✅ remove last line */
+.exercise-row:last-child {
+  border-bottom: none;
+}
+
+.exercise-row strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* SET PILLS */
+.exercise-sets-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.set-pill {
+  background: var(--oat);
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+/* =========================
+   REMOVE EXERCISE BUTTON
+   ========================= */
+
+.remove-ex-btn {
+  width: 26px;
+  height: 26px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(229, 72, 72, 0.1);
+  color: #e54848;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.remove-ex-btn:hover {
+  background: rgba(229, 72, 72, 0.2);
+  color: #e3dddd;
+  transform: scale(1.1);
+}
+
+
+
+/* =========================
+   Mobile Tweaks
+   ========================= */
+
+@media (max-width: 640px) {
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .day-picker {
+    gap: 6px;
+  }
+}
+
+/* =========================
+   SPACING FIX — LARGE SCREENS
+   ========================= */
+
+@media (min-width: 1024px) {
+
+  /* ✅ more space between main cards */
+  .cards-grid {
+    gap: 36px;
+  }
+
+  /* ✅ more breathing inside each card */
+  .section {
+    padding: 1.5rem 1.2rem;
+  }
+
+  /* ✅ goal + edit spacing */
+  .goal-row {
+    gap: 16px;
+    margin-top: 12px;
+  }
+
+  .edit-row {
+    gap: 10px;
+  }
+
+  /* ✅ session spacing */
+  #session {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  /* ✅ space between buttons */
+  #session button {
+    margin-top: 4px;
+  }
+
+}
+
+/* =========================
+   GOAL ACTIONS (EDIT / SAVE)
+   ========================= */
+
+.edit-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;            /* ✅ spacing between Edit and Save */
+}
+
+/* ✅ text-style buttons */
+.goal-edit-link,
+#goal-save {
+  background: none;
+  border: none;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: var(--olive);
+  cursor: pointer;
+
+  padding: 6px 4px;     /* ✅ gives clickable area */
+  line-height: 1;
+
+  transition: all 0.15s ease;
+}
+
+/* ✅ hover */
+.goal-edit-link:hover,
+#goal-save:hover {
+  color: var(--fern);
+  text-decoration: underline;
+}
+
+/* ✅ make sure height matches input nicely */
+.edit-row input {
+  height: 34px;
+}

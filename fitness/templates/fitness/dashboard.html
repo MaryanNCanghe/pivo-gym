@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Dashboard | PIVO{% endblock %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="module" src="{% static 'js/dashboard-month.js' %}"></script>
+
+<script src="{% static 'js/steps.js' %}" defer></script>
+<script src="{% static 'js/water.js' %}" defer></script>
+
+
+{% endblock %}
+
+{% block body %}
+
+<section class="page-hero mb-4">
+  <h1>Dashboard</h1>
+  <p>Your progress at a glance.</p>
+</section>
+
+<div class="stats-grid">
+
+  <div class="card stat-card">
+    <h4>Steps</h4>
+
+    <div id="steps-count" data-steps="0" data-goal="10000">
+      0
+    </div>
+
+    <div class="progress">
+      <div id="steps-progress"></div>
+    </div>
+  </div>
+
+  <div class="card stat-card">
+    <h4>Weight</h4>
+
+    <div class="weight-value">
+      {{ request.user.profile.weight|default:"--" }} kg
+    </div>
+  </div>
+
+</div>
+
+<section class="card mt-4 p-3">
+  <h3 class="mb-3">Monthly Progress</h3>
+
+  <div style="height:300px;">
+    <canvas id="dashboardChart"></canvas>
+  </div>
+</section>
+
+{% endblock %}

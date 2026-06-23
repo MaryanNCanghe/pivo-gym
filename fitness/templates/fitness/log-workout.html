@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Log Workout — PIVO{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/workouts.css' %}">
+<script src="{% static 'js/log-workout.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+
+
+
+<section class="container">
+
+
+<header class="page-header">
+
+  <a href="/workouts/" class="back-link">
+    ← Back
+  </a>
+
+  <h2>Your workouts</h2>
+
+  <a href="/add-workout/" class="btn-primary-min">
+    Add workout
+  </a>
+
+</header>
+
+  <div id="workout-list"></div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}Your Profile | Pivo{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block body %}
+
+<section class="section">
+
+  <div class="profile-header">
+
+    <form method="post" enctype="multipart/form-data" action="{% url 'upload_avatar' %}" id="avatarForm">
+      {% csrf_token %}
+      <input type="file" name="avatar" accept="image/*" id="avatarInput" hidden>
+      <div class="avatar-wrap" onclick="document.getElementById('avatarInput').click()" title="Change photo">
+        {% if user.profile.avatar %}
+          <img class="avatar-circle" src="{{ user.profile.avatar.url }}" alt="Profile photo">
+        {% else %}
+          <div class="avatar-placeholder">{{ user.username|first|upper }}</div>
+        {% endif %}
+        <div class="avatar-overlay">Change</div>
+      </div>
+    </form>
+
+    <div class="profile-info">
+      <p class="profile-username">{{ user.username }}</p>
+      <p class="text-muted-pivo">
+        {% if user.profile.objective == "lose" %}Lose Weight
+        {% elif user.profile.objective == "gain" %}Gain Weight
+        {% else %}Maintain Weight
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <div class="kv mt-3">
+    <span class="key">Email</span>     <span class="val">{{ user.email }}</span>
+    <span class="key">Gender</span>    <span class="val">{{ user.profile.gender|capfirst }}</span>
+    <span class="key">Age</span>       <span class="val">{{ user.profile.age }}</span>
+    <span class="key">Weight</span>    <span class="val">{{ user.profile.weight }} kg</span>
+    <span class="key">Height</span>    <span class="val">{{ user.profile.height }} cm</span>
+  </div>
+
+  <a href="{% url 'questions' %}" class="btn-primary-min" style="margin-top:1.25rem;display:inline-block;">Edit Information</a>
+
+</section>
+
+<section class="section">
+
+  <div class="d-flex" style="justify-content:space-between;align-items:center;margin-bottom:1rem;">
+    <div>
+      <h3 class="card-title">Progress Photos</h3>
+      <p class="text-muted-pivo" style="font-size:.85rem;">Upload a photo each week to track your progress.</p>
+    </div>
+    <button class="btn-primary-min" onclick="document.getElementById('progressForm').style.display='block';this.style.display='none';">+ Add Photo</button>
+  </div>
+
+  <form id="progressForm" method="post" enctype="multipart/form-data"
+        action="{% url 'upload_progress_photo' %}"
+        style="display:none;margin-bottom:1.25rem;">
+    {% csrf_token %}
+    <div class="d-flex" style="gap:.5rem;flex-wrap:wrap;align-items:center;">
+      <input type="file" name="photo" accept="image/*" required class="form-control" style="flex:1;min-width:180px;">
+      <input type="text" name="note" placeholder="Note (optional)" class="form-control" style="flex:1;min-width:140px;">
+      <button type="submit" class="btn-primary-min">Upload</button>
+    </div>
+  </form>
+
+  {% if photos %}
+    <div class="progress-grid">
+      {% for p in photos %}
+        <div class="progress-card">
+          <img src="{{ p.photo.url }}" alt="Progress photo">
+          <div class="progress-card-info">
+            <span class="date">{{ p.uploaded_at|date:"M j, Y" }}</span>
+            {% if p.note %}<span class="note text-muted-pivo">{{ p.note }}</span>{% endif %}
+          </div>
+          <form method="post" action="{% url 'delete_progress_photo' p.pk %}" class="delete-form">
+            {% csrf_token %}
+            <button type="submit" class="delete-btn" title="Delete photo">&times;</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted-pivo text-center" style="padding:2rem 0;">No progress photos yet.</p>
+  {% endif %}
+
+</section>
+
+<script>
+  document.getElementById("avatarInput").addEventListener("change", function() {
+    if (this.files.length) document.getElementById("avatarForm").submit();
+  });
+</script>
+
+{% endblock %}

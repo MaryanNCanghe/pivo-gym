@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Questions | PIVO{% endblock %}
+
+{% block head %}
+<!-- Add any page-specific CSS or JS here if needed -->
+{% endblock %}
+
+{% block body %}
+<section class="page-hero mb-4">
+  <h1 class="title">Questions</h1>
+  <p class="subtitle">FAQ & Support</p>
+</section>
+
+<section class="section">
+  <h3 class="card-title">Frequently Asked</h3>
+  <div class="mt-3">
+    <p><strong>How do I create a workout?</strong><br><span class="text-muted-pivo">Go to Workouts → Add Workout and pick a template or create from scratch.</span></p>
+    <p><strong>How do I log meals?</strong><br><span class="text-muted-pivo">Use Meals → Quick Add or connect a nutrition source.</span></p>
+    <p><strong>Can I export my data?</strong><br><span class="text-muted-pivo">Yes, from Dashboard sections with the Export buttons.</span></p>
+  </div>
+</section>
+{% endblock %}
