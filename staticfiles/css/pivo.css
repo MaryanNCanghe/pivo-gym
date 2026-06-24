@@ -1,0 +1,239 @@
+/* ==========================================
+   PIVO — MINIMAL CLEAN THEME (COLOR PALETTE)
+   ========================================== */
+
+:root {
+  --pebble: #5c2a4e;
+  --olive: #e91e8c;
+  --fern: #f04aa0;
+  --dusk: #f8bbd9;
+  --ivory: #fff5f9;
+  --oat: #fce4ef;
+
+  --ink: #3d1535;
+  --muted: #9e6882;
+
+  --border: #f5c6dc;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+
+  --shadow-soft: 0 8px 24px rgba(233, 30, 140, 0.09);
+  --shadow-hover: 0 12px 36px rgba(233, 30, 140, 0.16);
+}
+
+/* ===== Base ===== */
+
+html, body {
+  height: 100%;
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+/* ===== Links ===== */
+a {
+  color: var(--olive);
+  text-decoration: none;
+  font-weight: 600;
+}
+a:hover { color: var(--fern); }
+
+/* ==========================================
+   TOP BAR (if used)
+   ========================================== */
+
+.topbar {
+  background: var(--ivory);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.topbar .container {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.4rem 0;
+}
+.sep {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--oat);
+  display: inline-block;
+}
+
+/* ==========================================
+   HEADER — CENTERED BRAND
+   ========================================== */
+
+.header {
+  background: var(--ivory);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: .5rem;
+}
+.brand-wrap {
+  padding: 1.2rem 0 .8rem;
+  display: flex;
+  justify-content: center;
+}
+.brand {
+  font-size: 1.9rem;
+  font-weight: 900;
+  color: var(--olive);
+}
+
+/* ==========================================
+   CARDS / SECTIONS
+   ========================================== */
+
+.section,
+.card-pivo {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.card-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--pebble);
+}
+
+.text-muted-pivo {
+  color: var(--muted);
+}
+
+/* ==========================================
+   FORMS
+   ========================================== */
+
+.form-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--pebble);
+  font-weight: 600;
+}
+.form-control {
+  background: #ffffff;
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem;
+  transition: border-color .15s, box-shadow .15s;
+  width: 100%;
+}
+.form-control:focus {
+  border-color: var(--olive);
+  box-shadow: 0 0 0 .15rem rgba(233,30,140,0.20);
+  outline: none;
+}
+
+.d-grid { display: grid; gap: 1rem; }
+
+/* FULLPAGE BACKGROUND — background-image is set via inline style in each template */
+.fullpage-bg {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.form-container {
+  width: 50%;
+  max-width: 500px;
+  background: rgba(255,255,255,0.75);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+@media (max-width: 768px) {
+  .form-container { width: 90%; }
+}
+
+/* ==========================================
+   BUTTONS (PRIMARY + OUTLINE)
+   ========================================== */
+
+.btn-primary-min {
+  background: var(--olive);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: .8rem 2rem;
+  font-weight: 700;
+  letter-spacing: .3px;
+  box-shadow: var(--shadow-soft);
+  transition: .2s;
+}
+.btn-primary-min:hover {
+  background: var(--fern);
+  box-shadow: var(--shadow-hover);
+}
+.btn-primary-min:active { transform: translateY(1px); }
+
+.btn-outline-min {
+  background: transparent;
+  color: var(--olive);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .6rem 2rem;
+  font-weight: 600;
+}
+.btn-outline-min:hover {
+  background: var(--oat);
+}
+
+/* Alerts */
+.alert-pivo {
+  background: var(--ivory);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .75rem;
+  color: var(--pebble);
+}
+
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+
+.navbar .navbar-toggler .navbar-toggler-icon {
+  background-image: var(--bs-navbar-toggler-icon-bg);
+  filter: invert(40%);
+  opacity: 1;
+  transition: none; 
+}
+
+.navbar .navbar-toggler,
+.navbar .navbar-toggler:hover,
+.navbar .navbar-toggler:focus,
+.navbar .navbar-toggler:active {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transition: none !important;
+}
+
+.navbar .navbar-toggler:hover .navbar-toggler-icon,
+.navbar .navbar-toggler:focus .navbar-toggler-icon,
+.navbar .navbar-toggler:active .navbar-toggler-icon {
+  filter: invert(40%) !important;   
+  opacity: 1 !important;
+}
+
+.navbar .navbar-toggler.pivo-toggler {
+  padding: 4px 6px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+}
+

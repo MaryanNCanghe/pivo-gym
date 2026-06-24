@@ -1,0 +1,213 @@
+/* =========================
+   PIVO — Dashboard Page
+   ========================= */
+
+/* ---------- Layout ---------- */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.stat-card h4 {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.stat-card div {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--pebble);
+}
+
+/* ---------- Steps ---------- */
+
+#steps-count {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--pebble);
+}
+
+.progress {
+  width: 100%;
+  height: 6px;
+  border-radius: 6px;
+  background: #eee;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+#steps-progress {
+  height: 100%;
+  width: 0%;
+  background: var(--fern);
+  transition: width 0.3s ease;
+}
+
+/* ---------- Chart ---------- */
+
+.chart-box,
+#dashboardChart {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+}
+
+/* ---------- Nutrition ---------- */
+
+#macrosChart {
+  display: block;
+  margin: auto;
+}
+
+#calories-left,
+#pro-left,
+#carb-left,
+#fat-left {
+  font-weight: 600;
+  color: var(--pebble);
+}
+
+/* ---------- Water ---------- */
+
+#water-amount {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--pebble);
+}
+
+#glasses-container {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+}
+
+.glass {
+  width: 100%;
+  aspect-ratio: 1 / 1.4;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.glass-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #53b4ec;
+  height: 0%;
+  transition: height 0.25s ease;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--fern);
+  color: white;
+  border: none;
+}
+
+.btn-secondary {
+  background: #eee;
+  border: none;
+  color: var(--pebble);
+}
+
+/* ---------- Calendar (kept for future use) ---------- */
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: 96px 1fr 96px;
+  align-items: center;
+}
+
+.calendar-title {
+  text-align: center;
+  font-weight: 800;
+  color: var(--pebble);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calendar-cell {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-height: 80px;
+  padding: 6px 8px;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+}
+
+.calendar-cell .date {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.calendar-cell.visited {
+  outline: 2px solid var(--fern);
+  background: #f8fbf7;
+}
+
+.calendar-weekday {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+/* ---------- Legend (optional future) ---------- */
+
+.legend-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.legend-protein { background: #7fb07c; }
+.legend-carbs   { background: #d8a874; }
+.legend-fat     { background: #b98ea7; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+  .stats-grid,
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}

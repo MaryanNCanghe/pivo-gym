@@ -1,0 +1,198 @@
+/* =========================
+   PIVO Dashboard — Home
+   ========================= */
+   .chart-box canvas {
+  z-index: 1;
+}
+
+.donut-center {
+  z-index: 2;
+}
+
+/* HERO */
+.hero-pivo {
+  text-align: center;
+  background: linear-gradient(180deg, rgba(255,245,249,0.8), rgba(255,255,255,0.75));
+}
+.hero-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--olive);
+}
+.hero-subtitle {
+  margin-top: .25rem;
+}
+
+/* PROGRESS (Steps) */
+.steps-display .steps-number {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--pebble);
+}
+.steps-display .steps-unit {
+  margin-left: .4rem;
+  color: var(--muted);
+}
+.pivo-progress {
+  background: #fce4ef;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.pivo-progress .progress-bar {
+  background: var(--olive);
+  box-shadow: var(--shadow-soft);
+}
+
+/* CHART WRAPPER */
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+}
+
+/* Doughnut legend dots */
+.legend-dot {
+  width: .75rem;
+  height: .75rem;
+  display: inline-block;
+  border-radius: 50%;
+}
+.legend-protein { background: #e91e8c; }
+.legend-carbs   { background: #f8bbd9; }
+.legend-fat     { background: #9c27b0; }
+
+/* WATER */
+.water-amount {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--pebble);
+}
+.glasses-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+}
+.glass {
+  width: 100%;
+  aspect-ratio: 1 / 1.4;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+.glass-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #e91e8c;
+  height: 0%;
+  transition: height .25s ease;
+}
+
+/* CAROUSEL BANNERS */
+.banner {
+  min-height: 130px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  color: var(--pebble);
+}
+.banner-title {
+  font-weight: 800;
+  color: var(--pebble);
+  margin: 0 0 .25rem 0;
+}
+.banner-workouts { background: linear-gradient(135deg, #fce4ef, #fff5f9); }
+.banner-recipes  { background: linear-gradient(135deg, #f3e5f5, #fff5f9); }
+.banner-ai       { background: linear-gradient(135deg, #fce4ef, #f3e5f5); }
+
+/* CALENDAR */
+.calendar-header {
+  display: grid;
+  grid-template-columns: 96px 1fr 96px;
+  align-items: center;
+}
+.calendar-title {
+  text-align: center;
+  font-weight: 800;
+  color: var(--pebble);
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+.calendar-cell {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-height: 80px;
+  padding: 6px 8px;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+}
+.calendar-cell .date {
+  font-size: .85rem;
+  color: var(--muted);
+}
+.calendar-cell.visited {
+  outline: 2px solid var(--fern);
+  background: #fff0f5;
+}
+.calendar-weekday {
+  text-transform: uppercase;
+  font-size: .75rem;
+  color: var(--muted);
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+
+/* Small tweaks */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(40%);
+}
+
+.chart-box {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+}
+
+/* ✅ Ensure canvas is centered */
+.chart-box canvas {
+  display: block;
+  margin: auto;
+  z-index: 1;
+}
+
+/* ✅ PERFECT CENTER OVERLAY */
+.donut-center {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 200px;
+  height: 200px;
+
+  border-radius: 50%;
+
+  z-index: 2;
+}

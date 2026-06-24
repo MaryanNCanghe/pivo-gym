@@ -1,0 +1,155 @@
+/* =====================================
+   PIVO — STEPS PAGE (APPLE FITNESS STYLE)
+   ===================================== */
+
+/* Page container spacing */
+.page-hero,
+.tile-grid {
+  margin-bottom: 2rem !important;
+}
+
+/* -------------------------------------
+   Apple-style glass tile
+   ------------------------------------- */
+.page-hero,
+.tile {
+  background: rgba(255, 255, 255, 0.75);
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow:
+    0 20px 35px rgba(0,0,0,0.05),
+    0 8px 16px rgba(0,0,0,0.03);
+  padding: 2rem 2.2rem;
+}
+
+/* -------------------------------------
+   Title & Subtitle — Apple Fitness
+   ------------------------------------- */
+.page-hero .title {
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #5c2a4e;
+}
+
+.page-hero .subtitle {
+  font-size: 1.05rem;
+  color: #9e6882;
+  margin-top: .4rem;
+}
+
+
+
+@media (min-width: 768px) {
+  .tile.span-4 { grid-column: span 4; }
+  .tile.span-8 { grid-column: span 8; }
+}
+
+/* -------------------------------------
+   Steps Number — Apple Watch style
+   ------------------------------------- */
+.steps-display .steps-number {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #3d1535;
+  letter-spacing: -1px;
+}
+
+.steps-display .steps-unit {
+  font-size: 1.1rem;
+  color: #9e6882;
+}
+
+/* -------------------------------------
+   Progress Bar — Apple Fitness Ring Style (Green)
+   ------------------------------------- */
+.pivo-progress {
+  height: 14px;
+  background: #fce4ef;
+  border-radius: 999px;
+  overflow: hidden;
+  border: none;
+}
+
+.pivo-progress .progress-bar {
+  background: linear-gradient(90deg, #e91e8c, #f8bbd9);
+  border-radius: 999px;
+}
+
+/* -------------------------------------
+   Inputs — clean & modern
+   ------------------------------------- */
+.goal-inline .form-control {
+  margin-top:12px;
+  border-radius: 12px;
+  border: 1px solid #f5c6dc;
+  background: #fff5f9;
+  padding: .45rem .6rem;
+  font-size: 1rem;
+}
+
+/* -------------------------------------
+   Chart Box — Apple Fitness look
+   ------------------------------------- */
+.chart-box {
+  margin-top: 1.5rem;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#weeklyChart {
+  width: 100% !important;
+  height: 300px !important;
+}
+
+/* -------------------------------------
+   Mobile tweaks
+   ------------------------------------- */
+@media (max-width: 768px) {
+  .page-hero,
+  .tile {
+    padding: 1.6rem 1.7rem;
+  }
+
+  .steps-display .steps-number {
+    font-size: 2.5rem;
+  }
+}
+
+
+/* =========================
+   STEPS GOAL FORM SPACING
+   ========================= */
+
+.goal-inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;              /* ✅ spacing between label, input, button */
+
+  margin-top: 20px;       /* ✅ space from section above */
+  margin-bottom: 10px;    /* ✅ space before "Current goal" */
+}
+
+/* ✅ label spacing */
+.goal-inline .form-label {
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+/* ✅ input spacing */
+.goal-inline .form-control {
+  margin: 0;
+  height: 38px;
+}
+
+/* ✅ button spacing */
+.goal-inline .btn {
+  margin: 0;
+  height: 38px;
+  padding: 0 14px;
+}
+

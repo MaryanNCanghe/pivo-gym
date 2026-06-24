@@ -1,0 +1,243 @@
+/* ── Filter chips ─────────────────────────────────────────────────────────── */
+.recipe-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+}
+
+.filter-btn {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: .78rem;
+  font-weight: 500;
+  padding: .3rem .85rem;
+  transition: background .15s, color .15s, border-color .15s;
+}
+
+.filter-btn:hover {
+  border-color: var(--olive);
+  color: var(--olive);
+}
+
+.filter-btn.active {
+  background: var(--olive);
+  border-color: var(--olive);
+  color: #fff;
+}
+
+/* ── Recipe grid ──────────────────────────────────────────────────────────── */
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .recipe-grid {
+    display: flex;
+    flex-direction: row;
+    gap: .85rem;
+    overflow-x: auto;
+    padding-bottom: .5rem;
+    scroll-snap-type: x mandatory;
+  }
+
+  .recipe-grid .recipe-card {
+    flex: 0 0 78vw;
+    max-width: 300px;
+    scroll-snap-align: start;
+  }
+}
+
+/* ── Recipe card ──────────────────────────────────────────────────────────── */
+.recipe-card {
+  background: var(--ivory);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  transition: box-shadow .15s;
+}
+
+.recipe-card:hover {
+  box-shadow: 0 3px 10px rgba(0,0,0,.09);
+}
+
+.recipe-card img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  width: 100%;
+}
+
+.recipe-placeholder-img {
+  align-items: center;
+  aspect-ratio: 16 / 9;
+  background: color-mix(in srgb, var(--olive) 10%, transparent);
+  display: flex;
+  font-size: 2.2rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.recipe-card-body {
+  flex: 1;
+  padding: .9rem 1rem .75rem;
+}
+
+/* ── Badges ───────────────────────────────────────────────────────────────── */
+.recipe-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem;
+  margin-bottom: .55rem;
+}
+
+.goal-badge,
+.meal-badge {
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  padding: .15rem .6rem;
+  text-transform: uppercase;
+}
+
+.goal-badge.goal-gain     { background: color-mix(in srgb, var(--olive) 15%, transparent);  color: var(--olive); }
+.goal-badge.goal-maintain { background: color-mix(in srgb, var(--dusk)  15%, transparent);  color: var(--dusk);  }
+.goal-badge.goal-lose     { background: color-mix(in srgb, var(--fern)  15%, transparent);  color: var(--fern);  }
+
+.meal-badge {
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  color: var(--muted);
+}
+
+/* ── Card body text ───────────────────────────────────────────────────────── */
+.recipe-name {
+  font-size: .95rem;
+  font-weight: 700;
+  margin-bottom: .3rem;
+  color: var(--ink);
+}
+
+.recipe-desc {
+  font-size: .82rem;
+  line-height: 1.45;
+  margin-bottom: .5rem;
+}
+
+.recipe-macros {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: .75rem;
+  font-weight: 600;
+  gap: .5rem;
+  color: var(--muted);
+}
+
+/* ── Expand button ────────────────────────────────────────────────────────── */
+.expand-btn {
+  font-size: .78rem;
+  padding: .25rem .7rem;
+}
+
+/* ── Expand panel ─────────────────────────────────────────────────────────── */
+.recipe-expand {
+  background: color-mix(in srgb, var(--oat) 40%, transparent);
+  border-top: 1px solid var(--border);
+  padding: .85rem 1rem;
+}
+
+.expand-heading {
+  color: var(--olive);
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  margin: .6rem 0 .3rem;
+  text-transform: uppercase;
+}
+
+.expand-heading:first-child { margin-top: 0; }
+
+.expand-list {
+  font-size: .82rem;
+  line-height: 1.6;
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.expand-text {
+  font-size: .82rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Add recipe form ──────────────────────────────────────────────────────── */
+#addRecipeForm {
+  background: var(--ivory);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.25rem;
+}
+
+.add-recipe-grid {
+  display: grid;
+  gap: .5rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 480px) {
+  .add-recipe-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.add-recipe-macros {
+  display: grid;
+  gap: .5rem;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 560px) {
+  .add-recipe-macros {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── User-recipe delete button ────────────────────────────────────────────── */
+.user-recipe-delete {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: .5rem;
+  top: .5rem;
+}
+
+.delete-recipe-btn {
+  align-items: center;
+  background: rgba(255,255,255,.85);
+  border: none;
+  border-radius: 999px;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  font-size: 1.1rem;
+  height: 1.6rem;
+  justify-content: center;
+  line-height: 1;
+  opacity: .7;
+  padding: 0;
+  transition: opacity .15s, background .15s;
+  width: 1.6rem;
+}
+
+.delete-recipe-btn:hover {
+  background: #fff;
+  opacity: 1;
+}
