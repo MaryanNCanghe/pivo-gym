@@ -195,6 +195,7 @@ class WorkoutSession(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=120, default="Workout")
     date = models.DateField(default=timezone.localdate)
+    duration_minutes = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

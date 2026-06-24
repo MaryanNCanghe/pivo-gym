@@ -1002,3 +1002,32 @@
 .edit-row input {
   height: 34px;
 }
+/* =========================
+   Timer Circle Ring
+   ========================= */
+
+.timer-circle-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-ring { display: block; }
+
+.timer-ring-fg {
+  transition: stroke-dashoffset 1s linear;
+}
+
+.timer-circle-label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.avg-time-row {
+  display: flex;
+  align-items: center;
+}

@@ -74,6 +74,10 @@
     <ul class="list-unstyled">
 
       <li class="mb-3">
+        <a href="{% url 'index' %}" class="nav-link">Home</a>
+      </li>
+
+      <li class="mb-3">
         <a href="{% url 'workouts' %}" class="nav-link">Workouts</a>
       </li>
 
@@ -92,6 +96,7 @@
       <li class="mb-3">
         <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
       </li>
+
       <li class="mb-3">
         <a href="{% url 'exercise_list' %}" class="nav-link">Exercise Library</a>
       </li>
@@ -99,9 +104,15 @@
       <li class="mb-3">
         <a href="{% url 'ai' %}" class="nav-link">AI Suggestions</a>
       </li>
+
       <li class="mb-3">
         <a href="{% url 'community' %}" class="nav-link">Community</a>
       </li>
+
+      <li class="mb-3">
+        <a href="{% url 'help' %}" class="nav-link">Help</a>
+      </li>
+
       <li class="mb-3">
         <a href="{% url 'logout' %}" class="nav-link">Logout</a>
       </li>
@@ -111,11 +122,36 @@
 </div>
 {% endif %}
 
-<main class="container py-4">
+<main class="container py-4 main-with-bottom-nav">
   <div class="section">
     {% block body %}{% endblock %}
   </div>
 </main>
+
+{% if user.is_authenticated %}
+<nav class="bottom-nav" aria-label="Mobile navigation">
+  <a href="{% url 'index' %}" class="bottom-nav-item">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Home</span>
+  </a>
+  <a href="{% url 'workouts' %}" class="bottom-nav-item">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11M6.5 17.5h11M3 12h18M2 8.5C2 7.67 2.67 7 3.5 7S5 7.67 5 8.5v7c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5v-7zm17 0c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v7c0 .83-.67 1.5-1.5 1.5S19 16.33 19 15.5v-7z"/></svg>
+    <span>Workouts</span>
+  </a>
+  <a href="{% url 'dashboard' %}" class="bottom-nav-item">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <span>Dashboard</span>
+  </a>
+  <a href="{% url 'community' %}" class="bottom-nav-item">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span>Community</span>
+  </a>
+  <a href="{% url 'meals' %}" class="bottom-nav-item">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>
+    <span>Meals</span>
+  </a>
+</nav>
+{% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 

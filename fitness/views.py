@@ -202,6 +202,9 @@ def dashboard(request: HttpRequest) -> HttpResponse:
 def ai(request: HttpRequest) -> HttpResponse:
     return render(request, "fitness/ai.html")
 
+def help_view(request: HttpRequest) -> HttpResponse:
+    return render(request, "fitness/help.html")
+
 @login_required
 @require_GET
 def meal_search(request: HttpRequest) -> JsonResponse:
@@ -656,11 +659,18 @@ def api_delete_workout(request, id):
 @require_POST
 def api_log_session(request):
     today = timezone.localdate()
+    duration_minutes = 0
+    try:
+        payload = json.loads(request.body.decode('utf-8'))
+        duration_minutes = int(payload.get('duration_minutes', 0))
+    except Exception:
+        pass
 
     WorkoutSession.objects.create(
         user=request.user,
         date=today,
         name="Workout session",
+        duration_minutes=duration_minutes,
     )
 
     start = today - timedelta(days=6)
@@ -680,16 +690,19 @@ def api_weekly_summary(request):
     today = timezone.localdate()
     start = today - timedelta(days=6)
 
-    sessions = WorkoutSession.objects.filter(
+    all_sessions = WorkoutSession.objects.filter(
         user=request.user,
         date__gte=start,
         date__lte=today,
-    ).values_list("date", flat=True)
+    )
 
     sessions = [
         s.date() if hasattr(s, "date") else s
-        for s in sessions
+        for s in all_sessions.values_list("date", flat=True)
     ]
+
+    durations = [s.duration_minutes for s in all_sessions if s.duration_minutes > 0]
+    avg_duration = round(sum(durations) / len(durations)) if durations else 0
 
     c = Counter(sessions)
 
@@ -704,6 +717,7 @@ def api_weekly_summary(request):
         "counts": counts,
         "weeklyGoal": 0,
         "daysAchieved": sum(counts),
+        "avgDuration": avg_duration,
     })
 
 @login_required

@@ -43,9 +43,11 @@
   function updateGoalUIFromSummary(summary) {
     const done = document.querySelector("#goal-done");
     const target = document.querySelector("#goal-target");
+    const avgEl = document.querySelector("#avg-duration");
 
     if (done) done.textContent = summary.daysAchieved ?? 0;
     if (target) target.textContent = summary.weeklyGoal ?? 0;
+    if (avgEl) avgEl.textContent = summary.avgDuration ? `${summary.avgDuration} min` : "—";
   }
 
   function initGoalSaving() {
@@ -113,11 +115,11 @@
 
     endBtn.addEventListener("click", async (e) => {
       e.preventDefault();
-      stopTimer();
+      const durationMinutes = stopTimer();
 
       endBtn.disabled = true;
       try {
-        const result = await jpost(API.logSession);
+        const result = await jpost(API.logSession, { duration_minutes: durationMinutes });
         const done = document.querySelector("#goal-done");
         if (done && result.daysAchieved != null) {
           done.textContent = result.daysAchieved;
@@ -214,15 +216,15 @@ function initGoalToggle() {
           {
             type: "bar",
             data: counts,
-            backgroundColor: "#30D15822",
-            borderColor: "#30D158",
+            backgroundColor: "#e91e8c33",
+            borderColor: "#e91e8c",
             borderWidth: 1.5,
             borderRadius: 6,
           },
           {
             type: "line",
             data: labels.map(() => weeklyGoal),
-            borderColor: "#FF9F0A",
+            borderColor: "#f04aa0",
             borderWidth: 2,
             borderDash: [6, 6],
             pointRadius: 0,

@@ -337,9 +337,7 @@ if (datePicker.value) {
   });
 
   // ── Food scanner ─────────────────────────────────────────────
-  const scanBtn = document.getElementById("scanBtn");
   const scanCameraBtn = document.getElementById("scanCameraBtn");
-  const scanCameraInput = document.getElementById("scanCameraInput");
   const scanFileInput = document.getElementById("scanFileInput");
   const scanPreview = document.getElementById("scanPreview");
   const scanThumb = document.getElementById("scanThumb");
@@ -352,18 +350,7 @@ if (datePicker.value) {
 
   let scanData = null;
 
-  scanBtn.onclick = () => scanFileInput.click();
-  if (scanCameraBtn) scanCameraBtn.onclick = () => scanCameraInput.click();
-  if (scanCameraInput) scanCameraInput.onchange = async () => {
-    const file = scanCameraInput.files[0];
-    if (!file) return;
-    scanFileInput.dispatchEvent(new Event("change"));
-    const dt = new DataTransfer();
-    dt.items.add(file);
-    scanFileInput.files = dt.files;
-    scanFileInput.dispatchEvent(new Event("change"));
-    scanCameraInput.value = "";
-  };
+  if (scanCameraBtn) scanCameraBtn.onclick = () => scanFileInput.click();
 
   scanRescanBtn.onclick = () => {
     scanPreview.hidden = true;
