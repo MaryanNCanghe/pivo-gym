@@ -10,9 +10,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-m)ze+avz=7bk-a!2*u1b%uzlj*fv$gda3v8$34%frl4(z1-po2')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['pivo-gym.vercel.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS', 'pivo-gym.vercel.app,.vercel.app,localhost,127.0.0.1'
+).split(',')
 
 
 INSTALLED_APPS = [
