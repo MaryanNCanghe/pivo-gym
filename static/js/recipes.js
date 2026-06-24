@@ -62,6 +62,24 @@
     });
   }
 
+  // Log recipe as meal
+  var csrftoken = document.cookie.match(/csrftoken=([^;]+)/)?.[1] || "";
+  document.querySelectorAll(".log-recipe-btn").forEach(function (btn) {
+    btn.addEventListener("click", async function () {
+      var url = btn.dataset.url;
+      if (!url) return;
+      var orig = btn.textContent;
+      btn.disabled = true;
+      try {
+        await fetch(url, { method: "POST", headers: { "X-CSRFToken": csrftoken } });
+        btn.textContent = "Added ✓";
+        setTimeout(function () { btn.textContent = orig; btn.disabled = false; }, 2000);
+      } catch (e) {
+        btn.disabled = false;
+      }
+    });
+  });
+
   // Expand / collapse recipe details
   document.querySelectorAll(".expand-btn").forEach(function (btn) {
     btn.addEventListener("click", function () {

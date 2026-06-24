@@ -161,6 +161,25 @@ def delete_recipe(request: HttpRequest, pk: int) -> HttpResponse:
     return redirect("recipes")
 
 @login_required
+@require_POST
+def log_recipe_as_meal(request: HttpRequest, pk: int) -> HttpResponse:
+    from .models import Recipe
+    try:
+        recipe = Recipe.objects.get(pk=pk)
+        MealEntry.objects.create(
+            user=request.user,
+            name=recipe.name,
+            calories=recipe.calories,
+            protein_g=recipe.protein_g,
+            carbs_g=recipe.carbs_g,
+            fat_g=recipe.fat_g,
+        )
+        update_today_summary(request.user)
+    except Recipe.DoesNotExist:
+        pass
+    return JsonResponse({"ok": True})
+
+@login_required
 def questions(request: HttpRequest) -> HttpResponse:
     profile = request.user.profile
     if request.method == "POST":
@@ -1071,23 +1090,25 @@ def api_dashboard_month(request):
 
     base_weight = float(user.profile.weight or 0)
 
+    all_sessions = WorkoutSession.objects.filter(user=user, date__gte=start, date__lte=today)
+    session_duration_map = {}
+    for s in all_sessions:
+        d = s.date
+        if d not in session_duration_map or s.duration_minutes > session_duration_map[d]:
+            session_duration_map[d] = s.duration_minutes
+
+    durations_nonzero = [v for v in session_duration_map.values() if v > 0]
+    avg_duration = round(sum(durations_nonzero) / len(durations_nonzero)) if durations_nonzero else 0
+
     for i in range(30):
         day = start + timedelta(days=i)
         labels.append(day.strftime("%d"))
 
-        summary = DailySummary.objects.filter(
-            user=user,
-            date=day
-        ).first()
-
+        summary = DailySummary.objects.filter(user=user, date=day).first()
         steps.append(summary.steps if summary else 0)
 
-        did_workout = WorkoutSession.objects.filter(
-            user=user,
-            date=day
-        ).exists()
-
-        workouts.append(1 if did_workout else 0)
+        dur = session_duration_map.get(day, 0)
+        workouts.append(dur if dur else (1 if day in session_duration_map else 0))
 
         weight.append(base_weight)
 
@@ -1095,5 +1116,6 @@ def api_dashboard_month(request):
         "labels": labels,
         "steps": steps,
         "workouts": workouts,
-        "weight": weight
+        "weight": weight,
+        "avgDuration": avg_duration,
     })

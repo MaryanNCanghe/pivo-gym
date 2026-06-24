@@ -59,7 +59,10 @@
           <span>C {{ r.carbs_g }}g</span>
           <span>F {{ r.fat_g }}g</span>
         </div>
-        <button class="expand-btn btn-outline-min mt-2" type="button">See recipe ›</button>
+        <div class="d-flex gap-2 mt-2 flex-wrap">
+          <button class="expand-btn btn-outline-min" type="button">See recipe ›</button>
+          <button class="log-recipe-btn btn-primary-min" data-url="{% url 'log_recipe_as_meal' r.pk %}" type="button" style="font-size:.78rem;padding:.3rem .7rem;">＋ Add to Meals</button>
+        </div>
       </div>
       <div class="recipe-expand" hidden>
         {% if r.ingredients %}
@@ -88,7 +91,7 @@
       <h3 class="card-title">My Recipe Book</h3>
       <p class="text-muted-pivo" style="font-size:.85rem;">Save your own favourite recipes.</p>
     </div>
-    <button class="btn-primary-min" id="addRecipeToggle">＋ Add Recipe</button>
+    <button class="btn-primary-min" id="addRecipeToggle" style="font-size:.78rem;padding:.35rem .8rem;border-radius:20px;">＋ Add Recipe</button>
   </div>
 
   <form id="addRecipeForm" method="post" enctype="multipart/form-data"

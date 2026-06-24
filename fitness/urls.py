@@ -40,6 +40,7 @@ urlpatterns = [
     path("recipes/", views.recipes, name="recipes"),
     path("recipes/add/", views.add_recipe, name="add_recipe"),
     path("recipes/delete/<int:pk>/", views.delete_recipe, name="delete_recipe"),
+    path("recipes/<int:pk>/log/", views.log_recipe_as_meal, name="log_recipe_as_meal"),
     path("steps/", views.steps, name="steps"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("ai/", views.ai, name="ai"),
