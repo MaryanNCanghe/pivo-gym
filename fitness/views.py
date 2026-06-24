@@ -1029,6 +1029,9 @@ def api_notifications_read(request):
 
 
 def _serialize_challenge(challenge, current_user):
+    participants = list(
+        challenge.participations.select_related('user').values_list('user__username', flat=True)[:10]
+    )
     return {
         'id': challenge.id,
         'title': challenge.title,
@@ -1036,6 +1039,7 @@ def _serialize_challenge(challenge, current_user):
         'creator': challenge.creator.username,
         'end_date': str(challenge.end_date),
         'participant_count': challenge.participations.count(),
+        'participants': participants,
         'is_joined': challenge.participations.filter(user=current_user).exists(),
         'is_mine': challenge.creator_id == current_user.id,
     }
@@ -1074,7 +1078,15 @@ def api_challenge_join(request, pk):
         joined = False
     else:
         joined = True
-    return JsonResponse({'ok': True, 'joined': joined, 'participant_count': challenge.participations.count()})
+    participants = list(
+        challenge.participations.select_related('user').values_list('user__username', flat=True)[:10]
+    )
+    return JsonResponse({
+        'ok': True,
+        'joined': joined,
+        'participant_count': challenge.participations.count(),
+        'participants': participants,
+    })
 
 
 @login_required

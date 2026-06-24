@@ -350,14 +350,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = document.createElement('div');
     card.className = 'comm-post';
     card.id = `challenge-${c.id}`;
+
+    const participantPills = (c.participants || []).map(u =>
+      `<span class="challenge-participant-pill">${esc(u)}</span>`
+    ).join('');
+    const extraCount = c.participant_count - (c.participants || []).length;
+    const moreLabel = extraCount > 0 ? `<span class="challenge-participant-pill" style="background:var(--border);color:var(--muted);">+${extraCount} more</span>` : '';
+
     card.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
-        <div>
+        <div style="flex:1;min-width:0;">
           <div style="font-weight:700;font-size:.95rem;color:var(--pebble);">${esc(c.title)}</div>
           ${c.description ? `<div style="font-size:.85rem;color:var(--muted);margin-top:.2rem;">${esc(c.description)}</div>` : ''}
-          <div style="font-size:.78rem;color:var(--muted);margin-top:.35rem;">by ${esc(c.creator)} · ends ${c.end_date} · ${c.participant_count} joined</div>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:.3rem;">by ${esc(c.creator)} · ends ${c.end_date}</div>
+          ${c.participant_count > 0 ? `
+            <div style="margin-top:.5rem;">
+              <span style="font-size:.72rem;color:var(--muted);font-weight:600;margin-right:.3rem;">${c.participant_count} joined:</span>
+              <span class="challenge-participants-row">${participantPills}${moreLabel}</span>
+            </div>` : `<div style="font-size:.72rem;color:var(--muted);margin-top:.3rem;">No one joined yet — be first!</div>`}
         </div>
-        <button class="challenge-join-btn btn-${c.is_joined ? 'outline' : 'primary'}-min" data-id="${c.id}" style="white-space:nowrap;flex-shrink:0;">
+        <button class="challenge-join-btn btn-${c.is_joined ? 'outline' : 'primary'}-min" data-id="${c.id}" style="white-space:nowrap;flex-shrink:0;font-size:.78rem;padding:.3rem .75rem;border-radius:20px;">
           ${c.is_joined ? 'Leave' : 'Join'}
         </button>
       </div>
@@ -367,6 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
       c.is_joined = data.joined;
       c.participant_count = data.participant_count;
+      c.participants = data.participants || c.participants;
       const newCard = buildChallengeCard(c);
       card.replaceWith(newCard);
     });
