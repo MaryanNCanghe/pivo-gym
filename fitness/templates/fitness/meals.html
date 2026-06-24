@@ -69,9 +69,11 @@
       <div id="searchDropdown" class="search-dropdown" hidden></div>
     </div>
     <button id="foodSearchBtn" class="btn-primary-min scan-icon-btn" title="Search food">&#128269;</button>
-    <button id="scanBtn" class="btn-outline-min scan-icon-btn" title="Scan food photo">📷</button>
+    <button id="scanBtn" class="btn-outline-min scan-icon-btn" title="Choose from gallery">🖼️</button>
+    <button id="scanCameraBtn" class="btn-outline-min scan-icon-btn" title="Take a photo">📷</button>
   </div>
   <input id="scanFileInput" type="file" accept="image/*" hidden>
+  <input id="scanCameraInput" type="file" accept="image/*" capture="environment" hidden>
 
   <div id="scanPreview" hidden style="margin-top:1rem;">
     <img id="scanThumb" style="max-width:120px;border-radius:8px;display:block;margin-bottom:.75rem;">

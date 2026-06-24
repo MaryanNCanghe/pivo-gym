@@ -34,7 +34,8 @@ except ImportError:
 from .utils import get_daily_goal, profile_complete
 from .models import (
     MealEntry, DailyGoal, DailySummary, StepSample, update_today_summary,
-    WorkoutSession, Workout, WorkoutExercise, ExerciseSet, Post, Comment
+    WorkoutSession, Workout, WorkoutExercise, ExerciseSet, Post, Comment,
+    Notification, Challenge, ChallengeParticipant,
 )
 
 def login_view(request: HttpRequest) -> HttpResponse:
@@ -966,6 +967,81 @@ def api_post_comments(request, pk):
             'time_ago': _time_ago(c.created_at),
         })
     return JsonResponse({'comments': result})
+
+
+@login_required
+@require_GET
+def api_notifications_count(request):
+    count = Notification.objects.filter(recipient=request.user, is_read=False).count()
+    return JsonResponse({'count': count})
+
+@login_required
+@require_GET
+def api_notifications(request):
+    notifs = Notification.objects.filter(recipient=request.user).select_related('sender', 'post')[:20]
+    data = [{
+        'id': n.id,
+        'sender': n.sender.username,
+        'post_id': n.post_id,
+        'is_read': n.is_read,
+        'time_ago': _time_ago(n.created_at),
+    } for n in notifs]
+    return JsonResponse({'notifications': data})
+
+@login_required
+@require_POST
+def api_notifications_read(request):
+    Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
+    return JsonResponse({'ok': True})
+
+
+def _serialize_challenge(challenge, current_user):
+    return {
+        'id': challenge.id,
+        'title': challenge.title,
+        'description': challenge.description,
+        'creator': challenge.creator.username,
+        'end_date': str(challenge.end_date),
+        'participant_count': challenge.participations.count(),
+        'is_joined': challenge.participations.filter(user=current_user).exists(),
+        'is_mine': challenge.creator_id == current_user.id,
+    }
+
+@login_required
+def api_challenges(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+        except Exception:
+            return HttpResponseBadRequest('Invalid JSON')
+        from datetime import date, timedelta
+        end_date = data.get('end_date') or str(date.today() + timedelta(days=7))
+        challenge = Challenge.objects.create(
+            creator=request.user,
+            title=(data.get('title') or '').strip(),
+            description=(data.get('description') or '').strip(),
+            end_date=end_date,
+        )
+        ChallengeParticipant.objects.create(challenge=challenge, user=request.user)
+        return JsonResponse({'ok': True, 'challenge': _serialize_challenge(challenge, request.user)})
+
+    challenges = Challenge.objects.select_related('creator').prefetch_related('participations')
+    return JsonResponse({'challenges': [_serialize_challenge(c, request.user) for c in challenges]})
+
+@login_required
+@require_POST
+def api_challenge_join(request, pk):
+    try:
+        challenge = Challenge.objects.get(pk=pk)
+    except Challenge.DoesNotExist:
+        return JsonResponse({'error': 'Not found'}, status=404)
+    participation, created = ChallengeParticipant.objects.get_or_create(challenge=challenge, user=request.user)
+    if not created:
+        participation.delete()
+        joined = False
+    else:
+        joined = True
+    return JsonResponse({'ok': True, 'joined': joined, 'participant_count': challenge.participations.count()})
 
 
 @login_required

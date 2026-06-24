@@ -15,6 +15,28 @@
   <p class="text-muted-pivo">Share your fitness journey with others</p>
 </div>
 
+<!-- Challenge Board -->
+<div class="section" id="challengeBoard">
+  <div class="d-flex" style="justify-content:space-between;align-items:center;margin-bottom:.85rem;">
+    <h3 class="card-title" style="margin:0;">Weekly Challenges</h3>
+    <button class="btn-primary-min" onclick="document.getElementById('challengeForm').hidden=!document.getElementById('challengeForm').hidden">+ New Challenge</button>
+  </div>
+
+  <div id="challengeForm" hidden style="background:var(--ivory);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1rem;">
+    <div class="d-grid" style="gap:.6rem;">
+      <input id="challengeTitle" class="form-control" placeholder="Challenge title (e.g. 10k steps every day)" maxlength="120">
+      <textarea id="challengeDesc" class="form-control" rows="2" placeholder="Describe the challenge (optional)"></textarea>
+      <div class="d-flex" style="gap:.5rem;align-items:center;">
+        <label style="font-size:.85rem;color:var(--muted);white-space:nowrap;">Ends on:</label>
+        <input id="challengeEnd" type="date" class="form-control" style="flex:1;">
+      </div>
+      <button class="btn-primary-min" onclick="createChallenge()">Create Challenge</button>
+    </div>
+  </div>
+
+  <div id="challengeList"></div>
+</div>
+
 <!-- Create post -->
 <div class="section comm-compose">
   <div class="comm-compose-top">

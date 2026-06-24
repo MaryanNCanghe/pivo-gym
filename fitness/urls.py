@@ -73,4 +73,11 @@ path("api/dashboard/month/", views.api_dashboard_month),
     path("api/posts/<int:pk>/like/", views.api_post_like, name="api_post_like"),
     path("api/posts/<int:pk>/delete/", views.api_post_delete, name="api_post_delete"),
     path("api/posts/<int:pk>/comments/", views.api_post_comments, name="api_post_comments"),
+
+    path("api/notifications/", views.api_notifications, name="api_notifications"),
+    path("api/notifications/count/", views.api_notifications_count, name="api_notifications_count"),
+    path("api/notifications/read/", views.api_notifications_read, name="api_notifications_read"),
+
+    path("api/challenges/", views.api_challenges, name="api_challenges"),
+    path("api/challenges/<int:pk>/join/", views.api_challenge_join, name="api_challenge_join"),
 ]

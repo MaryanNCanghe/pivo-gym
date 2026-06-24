@@ -330,6 +330,73 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadPage(1);
 
+  // ── Challenge board ─────────────────────────────────────────────
+  async function loadChallenges() {
+    try {
+      const res = await fetch('/api/challenges/');
+      const data = await res.json();
+      const list = document.getElementById('challengeList');
+      if (!list) return;
+      if (!data.challenges.length) {
+        list.innerHTML = '<p class="text-muted-pivo text-center" style="padding:1rem 0;">No challenges yet. Create the first one!</p>';
+        return;
+      }
+      list.innerHTML = '';
+      data.challenges.forEach(c => list.appendChild(buildChallengeCard(c)));
+    } catch {}
+  }
+
+  function buildChallengeCard(c) {
+    const card = document.createElement('div');
+    card.className = 'comm-post';
+    card.id = `challenge-${c.id}`;
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+        <div>
+          <div style="font-weight:700;font-size:.95rem;color:var(--pebble);">${esc(c.title)}</div>
+          ${c.description ? `<div style="font-size:.85rem;color:var(--muted);margin-top:.2rem;">${esc(c.description)}</div>` : ''}
+          <div style="font-size:.78rem;color:var(--muted);margin-top:.35rem;">by ${esc(c.creator)} · ends ${c.end_date} · ${c.participant_count} joined</div>
+        </div>
+        <button class="challenge-join-btn btn-${c.is_joined ? 'outline' : 'primary'}-min" data-id="${c.id}" style="white-space:nowrap;flex-shrink:0;">
+          ${c.is_joined ? 'Leave' : 'Join'}
+        </button>
+      </div>
+    `;
+    card.querySelector('.challenge-join-btn').addEventListener('click', async function() {
+      const res = await fetch(`/api/challenges/${c.id}/join/`, { method: 'POST', headers: { 'X-CSRFToken': csrftoken } });
+      const data = await res.json();
+      c.is_joined = data.joined;
+      c.participant_count = data.participant_count;
+      const newCard = buildChallengeCard(c);
+      card.replaceWith(newCard);
+    });
+    return card;
+  }
+
+  window.createChallenge = async function() {
+    const title = document.getElementById('challengeTitle').value.trim();
+    const desc = document.getElementById('challengeDesc').value.trim();
+    const endDate = document.getElementById('challengeEnd').value;
+    if (!title) { alert('Please enter a challenge title.'); return; }
+    const res = await fetch('/api/challenges/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+      body: JSON.stringify({ title, description: desc, end_date: endDate }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      document.getElementById('challengeTitle').value = '';
+      document.getElementById('challengeDesc').value = '';
+      document.getElementById('challengeEnd').value = '';
+      document.getElementById('challengeForm').hidden = true;
+      const list = document.getElementById('challengeList');
+      list.innerHTML = '';
+      list.prepend(buildChallengeCard(data.challenge));
+    }
+  };
+
+  loadChallenges();
+
   // ── Helpers ─────────────────────────────────────────────────────
   function esc(str) {
     return String(str)
