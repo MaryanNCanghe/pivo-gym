@@ -843,15 +843,18 @@ def search_exercises(request):
 
         items = []
         for ex in rows[:limit]:
-            gif_file = ex.get("gif") or ex.get("gifUrl") or ""
+            ex_id = ex.get("id", "")
+            # gif/gifUrl may not exist — the exercise ID doubles as the GIF filename
+            gif_file = ex.get("gif") or ex.get("gifUrl") or ex.get("gifId") or ex_id
             gif_url = f"/api/exercises/gif/?f={gif_file}" if gif_file else ""
             items.append({
-                "id": f"api_{ex.get('id', '')}",
+                "id": f"api_{ex_id}",
                 "name": ex.get("name", ""),
                 "category": (ex.get("bodyPart") or "").lower(),
                 "url": gif_url,
                 "equipment": ex.get("equipment", ""),
                 "target": ex.get("target", ""),
+                "_keys": list(ex.keys()),  # debug: shows what fields the API returns
             })
 
     except WorkoutXError as e:
@@ -867,18 +870,18 @@ def gif_proxy(request):
     from workoutx import WorkoutX
     filename = request.GET.get("f", "").strip()
     if not filename:
-        return HttpResponse(status=400)
+        return JsonResponse({"error": "missing f param"}, status=400)
     api_key = os.environ.get("WORKOUTX_API_KEY")
     if not api_key:
-        return HttpResponse(status=503)
+        return JsonResponse({"error": "WORKOUTX_API_KEY not set"}, status=503)
     try:
         wx = WorkoutX(api_key=api_key)
         data = wx.gifs.get(filename)
         resp = HttpResponse(data, content_type="image/gif")
         resp["Cache-Control"] = "public, max-age=86400"
         return resp
-    except Exception:
-        return HttpResponse(status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e), "filename": filename}, status=404)
 
 
 from datetime import timedelta
