@@ -46,18 +46,36 @@ document.addEventListener("DOMContentLoaded", () => {
   composeAvatar.textContent = "?";
   composeAvatar.style.background = "#8b9978";
 
-  // ── Image preview ───────────────────────────────────────────────
+  // ── Image / Video preview ────────────────────────────────────────
   postImageInput.addEventListener("change", () => {
     const file = postImageInput.files[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
-    imagePreviewImg.src = url;
+    const previewArea = imagePreviewWrap.querySelector(".comm-image-preview");
+    // Remove any existing video element
+    const existingVideo = previewArea.querySelector("video");
+    if (existingVideo) existingVideo.remove();
+    if (file.type.startsWith("video/")) {
+      imagePreviewImg.hidden = true;
+      const video = document.createElement("video");
+      video.src = url;
+      video.controls = true;
+      video.style.cssText = "max-width:100%;border-radius:10px;display:block;";
+      previewArea.insertBefore(video, imagePreviewImg);
+    } else {
+      imagePreviewImg.hidden = false;
+      imagePreviewImg.src = url;
+    }
     imagePreviewWrap.hidden = false;
   });
 
   removeImageBtn.addEventListener("click", () => {
     postImageInput.value = "";
     imagePreviewImg.src = "";
+    imagePreviewImg.hidden = false;
+    const previewArea = imagePreviewWrap.querySelector(".comm-image-preview");
+    const existingVideo = previewArea && previewArea.querySelector("video");
+    if (existingVideo) existingVideo.remove();
     imagePreviewWrap.hidden = true;
   });
 
@@ -167,13 +185,24 @@ document.addEventListener("DOMContentLoaded", () => {
       card.appendChild(p);
     }
 
-    // Image
+    // Image or Video
     if (post.image) {
-      const img = document.createElement("img");
-      img.className = "comm-post-image";
-      img.src = post.image;
-      img.alt = "Post image";
-      card.appendChild(img);
+      const ext = post.image.split("?")[0].split(".").pop().toLowerCase();
+      const videoExts = ["mp4", "webm", "ogg", "mov", "avi", "mkv"];
+      if (videoExts.includes(ext)) {
+        const video = document.createElement("video");
+        video.className = "comm-post-image";
+        video.src = post.image;
+        video.controls = true;
+        video.style.cssText = "max-width:100%;border-radius:10px;display:block;margin-top:.5rem;";
+        card.appendChild(video);
+      } else {
+        const img = document.createElement("img");
+        img.className = "comm-post-image";
+        img.src = post.image;
+        img.alt = "Post image";
+        card.appendChild(img);
+      }
     }
 
     // Actions

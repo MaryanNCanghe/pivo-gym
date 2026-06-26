@@ -317,35 +317,50 @@
 .quick-meal-form {
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: .6rem;
+}
+
+.quick-meal-name {
+  width: 100%;
+  font-size: .95rem;
 }
 
 .quick-meal-macros {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: .5rem;
+}
+
+.quick-meal-macros .form-control {
+  font-size: .875rem;
+  padding: .5rem .6rem;
 }
 
 .quick-meal-submit {
   width: 100%;
+  padding: .6rem 1rem;
+  font-size: .95rem;
 }
 
-/* On wider screens: lay everything out in one row */
+/* On wider screens: row layout */
 @media (min-width: 560px) {
   .quick-meal-form {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+    gap: .5rem;
   }
 
   .quick-meal-name {
-    flex: 1 1 160px;
+    flex: 1 1 180px;
     min-width: 0;
+    width: auto;
   }
 
   .quick-meal-macros {
-    flex: 2 1 280px;
+    flex: 2 1 300px;
     min-width: 0;
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .quick-meal-submit {

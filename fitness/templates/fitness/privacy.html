@@ -1,0 +1,171 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Privacy & Security | PIVO{% endblock %}
+
+{% block head %}
+<style>
+  .privacy-hero {
+    text-align: center;
+    padding: 1.5rem 0 1rem;
+  }
+  .privacy-hero h1 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--pebble);
+  }
+  .privacy-hero p {
+    color: var(--muted);
+    margin-top: .3rem;
+  }
+  .privacy-section {
+    margin-bottom: 1.6rem;
+  }
+  .privacy-section h2 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--pebble);
+    margin-bottom: .6rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .privacy-section h2 .icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--oat);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .95rem;
+    flex-shrink: 0;
+  }
+  .privacy-section p,
+  .privacy-section li {
+    font-size: .9rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .privacy-section ul {
+    padding-left: 1.25rem;
+    margin: .4rem 0 0;
+  }
+  .privacy-section li {
+    margin-bottom: .25rem;
+  }
+  .privacy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: var(--oat);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: .3rem .75rem;
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--pebble);
+    margin: .25rem .2rem .25rem 0;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="privacy-hero">
+  <h1>Privacy &amp; Security</h1>
+  <p>Your data stays yours — always.</p>
+</div>
+
+<div class="privacy-section">
+  <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.2rem;">
+    <span class="privacy-badge">🔒 No data selling</span>
+    <span class="privacy-badge">🚫 No third-party ads</span>
+    <span class="privacy-badge">✅ You own your data</span>
+    <span class="privacy-badge">🗑️ Delete anytime</span>
+  </div>
+</div>
+
+<div class="privacy-section">
+  <h2><span class="icon">📋</span> What We Collect</h2>
+  <p>To provide PIVO's features, we collect only what's needed:</p>
+  <ul>
+    <li><strong>Account info</strong> — your username, email, and password (stored encrypted).</li>
+    <li><strong>Profile data</strong> — age, weight, height, gender, and fitness objective you provide voluntarily.</li>
+    <li><strong>Activity logs</strong> — meals, steps, workouts, and water you track inside the app.</li>
+    <li><strong>Community content</strong> — posts, comments, and images you choose to share publicly.</li>
+  </ul>
+</div>
+
+<div class="privacy-section">
+  <h2><span class="icon">🚫</span> What We Never Do</h2>
+  <ul>
+    <li>We <strong>never sell, rent, or trade</strong> your personal information to third parties.</li>
+    <li>We <strong>never use your data for advertising</strong> or share it with ad networks.</li>
+    <li>We <strong>never access</strong> your health data outside of what you explicitly enter in PIVO.</li>
+    <li>We <strong>never share</strong> your private profile data (weight, age, etc.) with other users.</li>
+    <li>We <strong>never train AI models</strong> on your personal data without explicit consent.</li>
+  </ul>
+</div>
+
+<div class="privacy-section">
+  <h2><span class="icon">🎯</span> How We Use Your Data</h2>
+  <p>Your data is used exclusively to power your personal fitness experience:</p>
+  <ul>
+    <li>Show your daily nutrition, macro, and calorie progress.</li>
+    <li>Track your workout history and weekly performance.</li>
+    <li>Display your step count and water intake.</li>
+    <li>Power AI suggestions based on your goals (processed securely, not stored).</li>
+    <li>Show your posts and activity in the Community feed.</li>
+  </ul>
+</div>
+
+<div class="privacy-section">
+  <h2><span class="icon">🔐</span> How We Protect Your Data</h2>
+  <ul>
+    <li>Passwords are hashed using industry-standard cryptography — never stored in plain text.</li>
+    <li>All connections use HTTPS encryption in transit.</li>
+    <li>Your account is protected by secure session management.</li>
+    <li>Uploaded photos and files are stored in private, access-controlled storage.</li>
+  </ul>
+</div>
+
+<div class="privacy-section">
+  <h2><span class="icon">📣</span> Community & Public Content</h2>
+  <p>Posts you share in the Community feed are visible to other PIVO users. Your private stats — weight, macros, goals — are <strong>never</strong> shown publicly. You can delete your own posts at any time from the community page.</p>
+</div>
+
+<div class="privacy-section">
+  <h2><span class="icon">🗑️</span> Your Rights</h2>
+  <p>You are in full control of your data:</p>
+  <ul>
+    <li><strong>Access</strong> — view all data you've entered in your profile and logs.</li>
+    <li><strong>Edit</strong> — update your profile, goals, and activity data at any time.</li>
+    <li><strong>Delete</strong> — delete your posts, progress photos, and meal logs directly in the app.</li>
+    <li><strong>Account deletion</strong> — contact us to permanently delete your account and all associated data.</li>
+  </ul>
+</div>
+
+<div class="privacy-section">
+  <h2><span class="icon">📜</span> App Rules & Community Guidelines</h2>
+  <p>By using PIVO, you agree to:</p>
+  <ul>
+    <li>Use the app for personal fitness tracking only — not for commercial scraping or abuse.</li>
+    <li>Keep Community posts respectful, supportive, and fitness-related.</li>
+    <li>Not upload offensive, explicit, or harmful content in posts or photos.</li>
+    <li>Not attempt to access other users' private data or circumvent app security.</li>
+    <li>Not use the AI features to generate harmful, misleading, or abusive content.</li>
+  </ul>
+  <p style="margin-top:.6rem;">We reserve the right to remove content or suspend accounts that violate these rules.</p>
+</div>
+
+<div class="privacy-section">
+  <h2><span class="icon">✉️</span> Contact</h2>
+  <p>Questions about your privacy or data? Reach out to us at <strong>privacy@pivo.fit</strong>. We'll respond within 48 hours.</p>
+</div>
+
+<div style="text-align:center;padding:1.2rem 0 .5rem;color:var(--muted);font-size:.78rem;">
+  Last updated: June 2026 &mdash; PIVO Fitness
+</div>
+
+{% endblock %}

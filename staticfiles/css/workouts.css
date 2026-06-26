@@ -14,6 +14,29 @@
   padding: 2rem;
 }
 
+/* Full-width workout wrapper — no double container nesting */
+.workout-section {
+  width: 100%;
+}
+
+/* ======== Girly accent for workout cards ======== */
+.card {
+  border-top: 3px solid var(--border);
+}
+
+.card:focus-within {
+  border-top-color: var(--olive);
+  box-shadow: var(--shadow-hover);
+}
+
+.add-set-btn {
+  background: var(--olive);
+}
+
+.add-set-btn:hover {
+  background: var(--fern);
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -907,10 +930,23 @@
 
 @media (max-width: 640px) {
 
+  .container {
+    padding: .75rem .5rem;
+    max-width: 100%;
+  }
+
+  .card,
+  .form-card,
+  .wo-card {
+    padding: 1rem .85rem;
+    border-radius: 14px;
+  }
+
   .page-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+    margin-bottom: 1rem;
   }
 
   .btn {
@@ -918,7 +954,37 @@
   }
 
   .day-picker {
-    gap: 6px;
+    gap: 5px;
+  }
+
+  .day-btn {
+    padding: 5px 8px;
+    font-size: .8rem;
+  }
+
+  .exercise-sets input {
+    width: 45px;
+  }
+
+  .workout-card {
+    padding: 12px .85rem;
+  }
+
+  .exercise-item {
+    padding: 12px .85rem;
+  }
+
+  #exercise-results {
+    grid-template-columns: 1fr;
+  }
+
+  .workout-top {
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+
+  .workout-actions {
+    flex-wrap: wrap;
   }
 }
 

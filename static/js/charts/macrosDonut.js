@@ -15,13 +15,13 @@ export function createMacrosDonut(canvas, data) {
         data: empty ? [1] : [protein, carbs, fat],
 
         backgroundColor: empty
-          ? ["#ece9e6"]
-          : ["#8b9978", "#d0b9b4", "#7a8064"],
+          ? ["#fce4ef"]
+          : ["#e91e8c", "#f8bbd9", "#9c27b0"],
 
         borderWidth: empty ? 2 : 0,
-        borderColor: "#dcd7d2",
+        borderColor: "#f5c6dc",
 
-        cutout: "75%"
+        cutout: "70%"
       }]
     },
 
