@@ -569,7 +569,10 @@ def add_workout(request):
 
 @login_required
 def exercise_list(request):
-    body_parts = ["all", "abdomen", "arms", "back", "buttocks", "chest", "legs", "shoulders", "stretching", "cardio"]
+    body_parts = [
+        "back", "cardio", "chest", "lower arms", "lower legs",
+        "neck", "shoulders", "upper arms", "upper legs", "waist",
+    ]
     return render(request, "fitness/exercise-list.html", {"body_parts": body_parts})
 
 @login_required
@@ -785,84 +788,65 @@ def api_update_workout(request, id):
 
     return JsonResponse({"ok": True, "id": w.id})
 
-from django.http import JsonResponse, HttpResponseBadRequest
-from django.views.decorators.http import require_GET
-from django.contrib.auth.decorators import login_required
-import os
-import urllib.parse
-
 @require_GET
 @login_required
 def search_exercises(request):
-    if requests is None:
-        return JsonResponse(
-            {"items": [], "count": 0, "error": "Requests library not installed"},
-            status=200
-        )
+    try:
+        from workoutx import WorkoutX
+        from workoutx.errors import WorkoutXError
+    except ImportError:
+        return JsonResponse({"items": [], "count": 0, "error": "workoutx-sdk not installed"})
 
-    base = os.environ.get("EXERCISEDB_BASE", "https://exercisedb.p.rapidapi.com")
-    host = os.environ.get("EXERCISEDB_HOST", "exercisedb.p.rapidapi.com")
-    key = os.environ.get("RAPIDAPI_KEY")
+    api_key = os.environ.get("WORKOUTX_API_KEY")
+    if not api_key:
+        return JsonResponse({"items": [], "count": 0, "error": "WORKOUTX_API_KEY not set"})
 
-    if not key:
-        return JsonResponse(
-            {"items": [], "count": 0, "error": "RAPIDAPI_KEY not set"},
-            status=200
-        )
-
-    q = request.GET.get("q", "").strip().lower()
-    body = request.GET.get("bodyPart", "").strip().lower()
+    q = request.GET.get("q", "").strip()
+    body_part = request.GET.get("bodyPart", "").strip().lower()
     equipment = request.GET.get("equipment", "").strip().lower()
-    limit = int(request.GET.get("limit", "20"))
-
-    headers = {
-        "x-rapidapi-key": key,
-        "x-rapidapi-host": host,
-    }
+    limit = min(int(request.GET.get("limit", "20")), 100)
 
     try:
-        url = f"{base}/exercises"
+        wx = WorkoutX(api_key=api_key)
 
-        r = requests.get(url, headers=headers, timeout=12)
-        r.raise_for_status()
-        data = r.json()
+        if q:
+            raw = wx.exercises.by_name(q, limit=limit)
+            rows = raw if isinstance(raw, list) else raw.get("data", raw.get("exercises", []))
+        elif body_part:
+            raw = wx.exercises.by_body_part(body_part, limit=limit)
+            rows = raw if isinstance(raw, list) else raw.get("data", raw.get("exercises", []))
+        elif equipment:
+            raw = wx.exercises.by_equipment(equipment, limit=limit)
+            rows = raw if isinstance(raw, list) else raw.get("data", raw.get("exercises", []))
+        else:
+            raw = wx.exercises.list(limit=limit)
+            rows = raw if isinstance(raw, list) else raw.get("data", raw.get("exercises", []))
 
+        # Secondary client-side filter when name search + equipment are combined
+        if q and equipment:
+            rows = [r for r in rows if (r.get("equipment") or "").lower() == equipment]
+        if q and body_part:
+            rows = [r for r in rows if (r.get("bodyPart") or "").lower() == body_part]
+
+        items = []
+        for ex in rows[:limit]:
+            gif_file = ex.get("gif") or ex.get("gifUrl") or ""
+            gif_url = wx.gif_url(gif_file) if gif_file else ""
+            items.append({
+                "id": f"api_{ex.get('id', '')}",
+                "name": ex.get("name", ""),
+                "category": (ex.get("bodyPart") or "").lower(),
+                "url": gif_url,
+                "equipment": ex.get("equipment", ""),
+                "target": ex.get("target", ""),
+            })
+
+    except WorkoutXError as e:
+        return JsonResponse({"items": [], "count": 0, "error": str(e)})
     except Exception as e:
-        return JsonResponse(
-            {"items": [], "count": 0, "error": str(e)},
-            status=200
-        )
+        return JsonResponse({"items": [], "count": 0, "error": str(e)})
 
-    items = []
-
-    for i, row in enumerate(data):
-        name = (row.get("name") or "").lower()
-
-        if q and q not in name:
-            continue
-        if body and body != (row.get("bodyPart") or "").lower():
-            continue
-        if equipment and equipment != (row.get("equipment") or "").lower():
-            continue
-
-        gif = row.get("gifUrl")
-
-        items.append({
-            "id": f"api_{row.get('id')}",
-            "name": row.get("name"),
-            "category": (row.get("bodyPart") or "").lower(),
-            "url": gif or "",
-            "equipment": row.get("equipment"),
-            "target": row.get("target"),
-        })
-
-        if len(items) >= limit:
-            break
-
-    return JsonResponse({
-        "items": items,
-        "count": len(items)
-    })
+    return JsonResponse({"items": items, "count": len(items)})
 
 
 from datetime import timedelta
