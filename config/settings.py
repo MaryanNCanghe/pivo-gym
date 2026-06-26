@@ -105,8 +105,17 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
+STORAGES = {
+    "default": {
+        "BACKEND": "fitness.storage.CloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
+
+# MEDIA_URL / MEDIA_ROOT kept for local dev fallback; on Vercel all uploads go to Cloudinary
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 

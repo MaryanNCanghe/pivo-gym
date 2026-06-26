@@ -2,13 +2,22 @@
    PIVO — Profile page
    ========================= */
 
+/* Undo the layout's outer .section padding so profile sections use full width */
+.main-with-bottom-nav > .section {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 0;
+}
+
 .kv {
   display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: .75rem 1rem;
+  grid-template-columns: 140px 1fr;
+  gap: .6rem .75rem;
 }
-.kv .key { color: var(--muted); }
-.kv .val { color: var(--pebble); font-weight: 600; }
+.kv .key { color: var(--muted); font-size: .88rem; }
+.kv .val { color: var(--pebble); font-weight: 600; font-size: .88rem; }
 
 /* ---------- Profile header ---------- */
 
@@ -141,4 +150,66 @@
 
 .delete-btn:hover {
   background: rgba(200,40,40,.8);
+}
+
+/* ---------- Cute "Add Photo" pill button ---------- */
+
+.add-photo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .35rem .85rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  color: var(--pebble);
+  font-size: .78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+  box-shadow: var(--shadow-soft);
+}
+
+.add-photo-btn:hover {
+  background: var(--oat);
+  box-shadow: var(--shadow-hover);
+}
+
+.add-photo-btn svg {
+  flex-shrink: 0;
+  stroke: var(--olive);
+}
+
+/* ---------- Mobile: full width, less inner padding ---------- */
+
+@media (max-width: 576px) {
+  .section {
+    padding: 1.1rem 1rem;
+    border-radius: 14px;
+  }
+
+  .profile-header {
+    gap: 1rem;
+  }
+
+  .avatar-wrap,
+  .avatar-circle,
+  .avatar-placeholder {
+    width: 80px;
+    height: 80px;
+  }
+
+  .avatar-placeholder {
+    font-size: 1.6rem;
+  }
+
+  .kv {
+    grid-template-columns: 100px 1fr;
+    gap: .5rem .5rem;
+  }
+
+  .progress-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: .5rem;
+  }
 }
