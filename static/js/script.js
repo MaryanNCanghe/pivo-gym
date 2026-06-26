@@ -46,34 +46,19 @@ const isChartReady = () =>
   const barEl     = $('#steps-progress');
   const goalEndEl = $('#steps-goal-end');
   const goalLabel = $('#steps-goal-label');
-  const goalForm  = $('#stepsGoalForm');
-  const goalOut   = $('#stepsGoalOut');
 
   if (!stepsEl) return;
 
-  const storedStepsGoal = parseInt(localStorage.getItem('pivo_steps_goal') || '0', 10);
-  if (storedStepsGoal > 0) stepsEl.dataset.goal = String(storedStepsGoal);
-
+  // Values come from server-rendered data attributes — no localStorage override
   const stepsToday = parseInt(stepsEl.dataset.steps || '0', 10);
   const stepsGoal  = parseInt(stepsEl.dataset.goal  || '10000', 10);
 
   stepsEl.textContent = stepsToday.toLocaleString();
   if (goalLabel) goalLabel.textContent = stepsGoal.toLocaleString();
   if (goalEndEl) goalEndEl.textContent = stepsGoal.toLocaleString();
-  if (goalOut)   goalOut.textContent   = stepsGoal.toLocaleString();
 
   const pct = Math.max(0, Math.min(100, Math.round((stepsToday / stepsGoal) * 100)));
   if (barEl) barEl.style.width = pct + '%';
-
-  if (goalForm) {
-    goalForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const newGoal = parseInt(new FormData(goalForm).get('goal') || '0', 10);
-      if (!newGoal) return;
-      localStorage.setItem('pivo_steps_goal', String(newGoal));
-      location.reload();
-    });
-  }
 })();
 
 (function visitCalendar(){

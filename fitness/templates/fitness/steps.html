@@ -28,7 +28,7 @@
   <div class="steps-display my-2">
     <span id="steps-count" class="steps-number"
           data-steps="{{ steps_today|default:0 }}"
-          data-goal="{{ steps_goal|default:10000 }}">0</span>
+          data-goal="{{ steps_goal|default:10000 }}">{{ steps_today|default:0 }}</span>
     <span class="steps-unit">steps</span>
   </div>
 
@@ -38,20 +38,29 @@
 
   <div class="d-flex justify-content-between mt-1">
     <small class="text-muted-pivo">0</small>
-    <small class="text-muted-pivo" id="steps-goal-end">0</small>
+    <small class="text-muted-pivo" id="steps-goal-end">{{ steps_goal|default:10000 }}</small>
   </div>
 </section>
 
 <section class="section">
-  <form id="stepsGoalForm" class="goal-inline mt-3">
-    <label class="form-label m-0">Set goal:</label>
-    <input class="form-control" type="text" name="goal" min="1000" step="500"
-           placeholder="e.g., 10000" style="max-width: 160px;">
-    <button class="btn btn-outline-min" type="submit">Save</button>
+  <h3 class="card-title">Log Steps</h3>
+  <form id="stepsLogForm" class="goal-inline mt-2">
+    <input id="stepsInput" class="form-control" type="number" min="1" max="100000"
+           placeholder="Total steps today" style="max-width: 200px;">
+    <button class="btn-primary-min" type="submit">Save Steps</button>
   </form>
+  <small id="stepsSaved" class="text-muted-pivo d-block mt-1" hidden>Saved ✓</small>
+</section>
 
+<section class="section">
+  <h3 class="card-title">Daily Goal</h3>
+  <form id="stepsGoalForm" class="goal-inline mt-2">
+    <input class="form-control" type="number" name="goal" min="1000" step="500"
+           placeholder="e.g., 10000" style="max-width: 200px;">
+    <button class="btn btn-outline-min" type="submit">Set Goal</button>
+  </form>
   <small class="text-muted-pivo d-block mt-1">
-    Current goal: <strong id="stepsGoalOut">0</strong>
+    Current goal: <strong id="stepsGoalOut">{{ steps_goal|default:10000 }}</strong> steps
   </small>
 </section>
 {% endblock %}

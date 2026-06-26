@@ -1,135 +1,78 @@
-const $  = (sel) => document.querySelector(sel);
-const isChartReady = () => typeof window.Chart !== "undefined";
-
-function parseArray(raw, fallback) {
-  try {
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) && arr.length ? arr : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function todayString() {
-  return new Date().toISOString().split("T")[0];
-}
-
-function millisUntilMidnight() {
-  const now = new Date();
-  const midnight = new Date();
-  midnight.setHours(24, 0, 0, 0);
-  return midnight - now;
-}
-
-function initStepsUI() {
-  const stepsEl   = $("#steps-count");
-  const barEl     = $("#steps-progress");
-  const goalEndEl = $("#steps-goal-end");
-  const goalOut   = $("#stepsGoalOut");
-  const form      = $("#stepsGoalForm");
+document.addEventListener("DOMContentLoaded", () => {
+  const stepsEl   = document.getElementById("steps-count");
+  const barEl     = document.getElementById("steps-progress");
+  const goalEndEl = document.getElementById("steps-goal-end");
+  const goalOut   = document.getElementById("stepsGoalOut");
+  const logForm   = document.getElementById("stepsLogForm");
+  const goalForm  = document.getElementById("stepsGoalForm");
+  const stepsSaved = document.getElementById("stepsSaved");
 
   if (!stepsEl) return;
 
-  const savedGoal = parseInt(localStorage.getItem("pivo_steps_goal") || "0", 10);
-  if (savedGoal > 0) stepsEl.dataset.goal = savedGoal;
+  const csrf = () =>
+    document.cookie.match(/csrftoken=([^;]+)/)?.[1] || "";
 
   let stepsToday = parseInt(stepsEl.dataset.steps || "0", 10);
-  let stepsGoal  = parseInt(stepsEl.dataset.goal || "10000", 10);
+  let stepsGoal  = parseInt(stepsEl.dataset.goal  || "10000", 10);
 
-  const lastDate = localStorage.getItem("pivo_steps_last_date");
-  const today = todayString();
+  function updateUI(steps, goal) {
+    stepsToday = steps;
+    stepsGoal  = goal || stepsGoal;
 
-  if (lastDate !== today) {
-    stepsToday = 0;
-    stepsEl.dataset.steps = "0";
-    localStorage.setItem("pivo_steps_last_date", today);
+    stepsEl.textContent = stepsToday.toLocaleString();
+    if (goalOut)   goalOut.textContent   = stepsGoal.toLocaleString();
+    if (goalEndEl) goalEndEl.textContent = stepsGoal.toLocaleString();
+
+    const pct = Math.min(100, Math.round((stepsToday / Math.max(1, stepsGoal)) * 100));
+    if (barEl) barEl.style.width = pct + "%";
   }
 
-  stepsEl.textContent = stepsToday.toLocaleString();
-  goalOut.textContent = stepsGoal.toLocaleString();
-  goalEndEl.textContent = stepsGoal.toLocaleString();
+  // Initial render from server-rendered values
+  updateUI(stepsToday, stepsGoal);
 
-  const pct = Math.round((stepsToday / Math.max(1, stepsGoal)) * 100);
-  barEl.style.width = pct + "%";
-
-  form.addEventListener("submit", (e) => {
+  // ── Log steps ─────────────────────────────────────────────────────
+  logForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const fd = new FormData(form);
-    const newGoal = parseInt(fd.get("goal") || "0", 10);
-    if (!newGoal || newGoal < 1000) return;
+    const input = document.getElementById("stepsInput");
+    const val = parseInt(input.value || "0", 10);
+    if (!val || val < 1) return;
 
-    localStorage.setItem("pivo_steps_goal", newGoal);
-    stepsGoal = newGoal;
-
-    goalOut.textContent = newGoal.toLocaleString();
-    goalEndEl.textContent = newGoal.toLocaleString();
-
-    const newPct = Math.round((stepsToday / newGoal) * 100);
-    barEl.style.width = newPct + "%";
-
-    form.reset();
-  });
-
-  setTimeout(() => {
-    stepsEl.dataset.steps = "0";
-    stepsEl.textContent = "0";
-    barEl.style.width = "0%";
-    localStorage.setItem("pivo_steps_last_date", todayString());
-
-    setInterval(() => {
-      stepsEl.dataset.steps = "0";
-      stepsEl.textContent = "0";
-      barEl.style.width = "0%";
-      localStorage.setItem("pivo_steps_last_date", todayString());
-    }, 86400000);
-
-  }, millisUntilMidnight());
-}
-
-function initWeeklyChart() {
-  const canvas = document.getElementById("weeklyChart");
-  if (!canvas || typeof Chart === "undefined") return;
-
-  const labels = JSON.parse(canvas.dataset.labels || '["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]');
-
-  const rawSteps = JSON.parse(canvas.dataset.steps || "[]");
-  const steps = Array.isArray(rawSteps) && rawSteps.length
-    ? rawSteps
-    : [0,0,0,0,0,0,0];
-
-  while (steps.length < 7) steps.push(0);
-  if (steps.length > 7) steps.length = 7;
-
-  new Chart(canvas.getContext("2d"), {
-    type: "line",
-    data: {
-      labels,
-      datasets: [
-        {
-          label: "Steps",
-          data: steps,
-          borderColor: "#8b9978",
-          backgroundColor: "rgba(139,153,120,0.25)",
-          tension: 0.35,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { position: "bottom" } },
-      scales: {
-        y: {
-          beginAtZero: true,
-          min: 0,
-          suggestedMax: Math.max(...steps, 1000),
-          title: { display: true, text: "Steps" }
+    try {
+      const res = await fetch("/steps/add/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-CSRFToken": csrf() },
+        body: JSON.stringify({ steps: val }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        updateUI(data.steps, stepsGoal);
+        input.value = "";
+        if (stepsSaved) {
+          stepsSaved.hidden = false;
+          setTimeout(() => { stepsSaved.hidden = true; }, 2000);
         }
       }
+    } catch (err) {
+      console.error("Steps log error:", err);
     }
   });
-}
 
-document.addEventListener("DOMContentLoaded", () => {
-  initStepsUI();
-  initWeeklyChart();
+  // ── Save goal (persists to DB via meal_goals endpoint) ────────────
+  goalForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const val = parseInt(new FormData(goalForm).get("goal") || "0", 10);
+    if (!val || val < 1000) return;
+
+    try {
+      await fetch("/meals/goals/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-CSRFToken": csrf() },
+        body: JSON.stringify({ steps: val }),
+      });
+      updateUI(stepsToday, val);
+      goalForm.reset();
+    } catch (err) {
+      console.error("Goal save error:", err);
+    }
+  });
 });

@@ -194,12 +194,18 @@ def questions(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
-
     Profile.objects.get_or_create(user=request.user)
-
     if not profile_complete(request.user):
         return redirect("questions")
-    return render(request, "fitness/index.html")
+
+    today = timezone.localdate()
+    goal = get_daily_goal(request.user)
+    summary = DailySummary.objects.filter(user=request.user, date=today).first()
+
+    return render(request, "fitness/index.html", {
+        "steps_today": summary.steps if summary else 0,
+        "steps_goal": goal.steps or 10000,
+    })
 
 @login_required
 def workouts(request: HttpRequest) -> HttpResponse:
@@ -211,7 +217,14 @@ def meals(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def steps(request: HttpRequest) -> HttpResponse:
-    return render(request, "fitness/steps.html")
+    today = timezone.localdate()
+    goal = get_daily_goal(request.user)
+    summary = DailySummary.objects.filter(user=request.user, date=today).first()
+
+    return render(request, "fitness/steps.html", {
+        "steps_today": summary.steps if summary else 0,
+        "steps_goal": goal.steps or 10000,
+    })
 
 @login_required
 def dashboard(request: HttpRequest) -> HttpResponse:
