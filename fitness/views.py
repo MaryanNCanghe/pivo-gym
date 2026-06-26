@@ -844,7 +844,7 @@ def search_exercises(request):
         items = []
         for ex in rows[:limit]:
             gif_file = ex.get("gif") or ex.get("gifUrl") or ""
-            gif_url = wx.gif_url(gif_file) if gif_file else ""
+            gif_url = f"/api/exercises/gif/?f={gif_file}" if gif_file else ""
             items.append({
                 "id": f"api_{ex.get('id', '')}",
                 "name": ex.get("name", ""),
@@ -860,6 +860,25 @@ def search_exercises(request):
         return JsonResponse({"items": [], "count": 0, "error": str(e)})
 
     return JsonResponse({"items": items, "count": len(items)})
+
+
+def gif_proxy(request):
+    """Proxy WorkoutX GIF so the API key never leaves the server and CORS is avoided."""
+    from workoutx import WorkoutX
+    filename = request.GET.get("f", "").strip()
+    if not filename:
+        return HttpResponse(status=400)
+    api_key = os.environ.get("WORKOUTX_API_KEY")
+    if not api_key:
+        return HttpResponse(status=503)
+    try:
+        wx = WorkoutX(api_key=api_key)
+        data = wx.gifs.get(filename)
+        resp = HttpResponse(data, content_type="image/gif")
+        resp["Cache-Control"] = "public, max-age=86400"
+        return resp
+    except Exception:
+        return HttpResponse(status=404)
 
 
 from datetime import timedelta

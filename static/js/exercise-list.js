@@ -2,6 +2,10 @@ const EX_API = {
   search: "/api/exercises/search/"
 };
 
+function closeModal() {
+  document.getElementById("exercise-modal").classList.add("hidden");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   loadInitialExercises();
   initSearchForm();
@@ -9,13 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("close-exercise")
     ?.addEventListener("click", closeModal);
 
-  document.querySelector(".media-backdrop")
-    ?.addEventListener("click", closeModal);
-
-
-document.getElementById("exercise-modal")
-    ?.addEventListener("click", closeModal);
-
+  document.getElementById("exercise-modal")
+    ?.addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
 });
 
 async function loadInitialExercises() {

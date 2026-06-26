@@ -66,6 +66,7 @@ urlpatterns = [
     path("api/workouts/update/<int:id>/", views.api_update_workout, name="api_update_workout"),
 
     path("api/exercises/search/", views.search_exercises, name="search_exercises"),
+    path("api/exercises/gif/", views.gif_proxy, name="gif_proxy"),
 
 
 path("meals/day/", views.meals_day),
