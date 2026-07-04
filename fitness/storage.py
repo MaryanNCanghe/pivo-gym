@@ -1,77 +1,84 @@
-"""Cloudinary media storage — replaces local filesystem for Vercel."""
+"""Vercel Blob media storage — no filesystem writes, no extra dependencies."""
+import json
 import os
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+import ssl
+import urllib.parse
+import urllib.request
 from django.core.files.storage import Storage
 
+BLOB_API = "https://blob.vercel-storage.com"
 
-def _configure():
-    cloud_name = os.environ.get("CLOUDINARY_CLOUD_NAME")
-    api_key = os.environ.get("CLOUDINARY_API_KEY")
-    api_secret = os.environ.get("CLOUDINARY_API_SECRET")
-    if not (cloud_name and api_key and api_secret):
+
+def _ssl_ctx():
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except Exception:
+        return ssl.create_default_context()
+
+
+def _token():
+    t = os.environ.get("BLOB_READ_WRITE_TOKEN", "")
+    if not t:
         raise EnvironmentError(
-            "Cloudinary credentials missing. Set CLOUDINARY_CLOUD_NAME, "
-            "CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in your environment."
+            "BLOB_READ_WRITE_TOKEN is not set. "
+            "Create a Vercel Blob store in your Vercel dashboard and connect it to this project."
         )
-    cloudinary.config(
-        cloud_name=cloud_name,
-        api_key=api_key,
-        api_secret=api_secret,
-        secure=True,
-    )
+    return t
 
 
-def _public_id(name: str) -> str:
-    """Strip extension — Cloudinary uses the base path as the public_id."""
-    return os.path.splitext(name)[0]
-
-
-class CloudinaryStorage(Storage):
-    def __init__(self):
-        _configure()
+class VercelBlobStorage(Storage):
 
     def _save(self, name, content):
-        _configure()
-        result = cloudinary.uploader.upload(
-            content,
-            public_id=_public_id(name),
-            overwrite=True,
-            resource_type="auto",
+        token = _token()
+        data = content.read() if hasattr(content, "read") else content
+        content_type = getattr(content, "content_type", "application/octet-stream")
+        url = f"{BLOB_API}/{urllib.parse.quote(name, safe='/')}"
+        req = urllib.request.Request(
+            url,
+            data=data,
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": content_type,
+                "x-api-version": "7",
+            },
+            method="PUT",
         )
-        fmt = result.get("format", "")
-        pid = result["public_id"]
-        return f"{pid}.{fmt}" if fmt else pid
+        with urllib.request.urlopen(req, context=_ssl_ctx()) as resp:
+            result = json.loads(resp.read())
+        # Store the full public URL — url() returns it as-is
+        return result["url"]
 
     def url(self, name):
-        if not name:
-            return ""
-        _configure()
-        return cloudinary.CloudinaryImage(_public_id(name)).build_url(secure=True)
+        return name or ""
 
     def exists(self, name):
-        _configure()
-        try:
-            cloudinary.api.resource(_public_id(name))
-            return True
-        except Exception:
-            return False
+        # Always return False — Vercel Blob generates unique hashed URLs so
+        # collisions don't happen; returning False lets Django skip the check.
+        return False
 
     def delete(self, name):
-        _configure()
+        if not name:
+            return
         try:
-            cloudinary.uploader.destroy(_public_id(name))
+            token = _token()
+            body = json.dumps({"urls": [name]}).encode()
+            req = urllib.request.Request(
+                BLOB_API,
+                data=body,
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Content-Type": "application/json",
+                    "x-api-version": "7",
+                },
+                method="DELETE",
+            )
+            urllib.request.urlopen(req, context=_ssl_ctx())
         except Exception:
             pass
 
     def _open(self, name, mode="rb"):
-        raise NotImplementedError("CloudinaryStorage does not support open()")
+        raise NotImplementedError("VercelBlobStorage does not support open()")
 
     def size(self, name):
-        _configure()
-        try:
-            res = cloudinary.api.resource(_public_id(name))
-            return res.get("bytes", 0)
-        except Exception:
-            return 0
+        return 0
