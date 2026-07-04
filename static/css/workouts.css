@@ -194,21 +194,124 @@
    ========================= */
 
 #exercise-results {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  display: block;
+  margin-top: 8px;
 }
 
-@media (min-width: 640px) {
-  #exercise-results {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* ---------- Compact search result list ---------- */
+
+.ex-result-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-@media (min-width: 1024px) {
-  #exercise-results {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.ex-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: .55rem .6rem;
+  border-bottom: 1px solid var(--border);
+  cursor: default;
+}
+
+.ex-result-item:last-of-type {
+  border-bottom: none;
+}
+
+.ex-result-name {
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--pebble);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ex-result-actions {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  flex-shrink: 0;
+}
+
+.ex-preview-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  transition: color .15s;
+}
+
+.ex-preview-btn:hover {
+  color: var(--olive);
+}
+
+.ex-add-btn {
+  padding: .3rem .75rem;
+  border-radius: 999px;
+  border: none;
+  background: #e91e8c;
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.ex-add-btn:hover {
+  background: #c2185b;
+}
+
+/* Inline preview row (hidden by default) */
+
+.ex-preview-row {
+  padding: .6rem .6rem .8rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--ivory);
+}
+
+.ex-preview-row.hidden {
+  display: none;
+}
+
+.ex-preview-media {
+  width: 100%;
+  max-width: 240px;
+  margin: 0 auto .5rem;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff5f9;
+}
+
+.ex-preview-media img,
+.ex-preview-media video {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.ex-preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.ex-preview-tags span {
+  background: var(--oat);
+  font-size: .72rem;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: var(--pebble);
 }
 
 /* =========================

@@ -85,11 +85,15 @@ def profile(request: HttpRequest) -> HttpResponse:
 def upload_avatar(request: HttpRequest) -> HttpResponse:
     avatar_file = request.FILES.get("avatar")
     if avatar_file:
-        prof = request.user.profile
-        if prof.avatar:
-            prof.avatar.delete(save=False)
-        prof.avatar = avatar_file
-        prof.save()
+        try:
+            prof = request.user.profile
+            if prof.avatar:
+                prof.avatar.delete(save=False)
+            prof.avatar = avatar_file
+            prof.save()
+        except (EnvironmentError, Exception) as e:
+            from django.contrib import messages
+            messages.error(request, "Photo upload is not configured yet. Please contact the admin.")
     return redirect("profile")
 
 @login_required
@@ -98,11 +102,15 @@ def upload_progress_photo(request: HttpRequest) -> HttpResponse:
     from .models import ProgressPhoto
     photo_file = request.FILES.get("photo")
     if photo_file:
-        ProgressPhoto.objects.create(
-            user=request.user,
-            photo=photo_file,
-            note=request.POST.get("note", "").strip(),
-        )
+        try:
+            ProgressPhoto.objects.create(
+                user=request.user,
+                photo=photo_file,
+                note=request.POST.get("note", "").strip(),
+            )
+        except (EnvironmentError, Exception) as e:
+            from django.contrib import messages
+            messages.error(request, "Photo upload is not configured yet. Please contact the admin.")
     return redirect("profile")
 
 @login_required
