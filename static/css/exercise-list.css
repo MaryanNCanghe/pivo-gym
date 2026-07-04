@@ -208,3 +208,112 @@
     width: 100%;
   }
 }
+
+/* =========================
+   CARD VIDEO BADGE
+   ========================= */
+
+.exercise-media {
+  position: relative;
+}
+
+.ex-vid-badge {
+  position: absolute;
+  top: .45rem;
+  left: .5rem;
+  background: rgba(0,0,0,.52);
+  color: #fff;
+  font-size: .62rem;
+  font-weight: 700;
+  padding: .15rem .5rem;
+  border-radius: 20px;
+  letter-spacing: .04em;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+/* =========================
+   EXERCISE DETAIL MODAL INNER
+   ========================= */
+
+#exercise-full {
+  background: #fff;
+  border-radius: 20px;
+  max-width: 480px;
+  width: calc(100% - 2rem);
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.ex-modal-title {
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--pebble);
+  margin-bottom: .5rem;
+}
+
+.ex-modal-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-bottom: .9rem;
+}
+
+.ex-demo-label {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+  margin-bottom: .4rem;
+}
+
+.ex-modal-media {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+}
+
+.ex-yt-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  width: 100%;
+  padding: .75rem 1rem;
+  border-radius: 12px;
+  background: #ff0000;
+  color: #fff;
+  font-weight: 700;
+  font-size: .9rem;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  transition: opacity .15s;
+}
+
+.ex-yt-btn:hover { opacity: .85; color: #fff; }
+
+.ex-steps-label {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: .75rem;
+  margin-bottom: .4rem;
+}
+
+.ex-steps-list {
+  padding-left: 1.2rem;
+  font-size: .84rem;
+  color: var(--pebble);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.ex-steps-list li { margin-bottom: .25rem; }
