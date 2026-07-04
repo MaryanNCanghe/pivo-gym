@@ -267,3 +267,14 @@ class ChallengeParticipant(models.Model):
 
     class Meta:
         unique_together = ('challenge', 'user')
+
+
+class StoredFile(models.Model):
+    """Stores uploaded files as base64 in PostgreSQL — no external storage needed."""
+    name = models.CharField(max_length=255, unique=True, db_index=True)
+    content_type = models.CharField(max_length=100, default="application/octet-stream")
+    data = models.TextField()  # base64-encoded bytes
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

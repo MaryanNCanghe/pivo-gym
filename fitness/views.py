@@ -873,6 +873,20 @@ def search_exercises(request):
     return JsonResponse({"items": items, "count": len(items)})
 
 
+def serve_stored_file(request, name):
+    """Serve a file stored as base64 in the database."""
+    import base64
+    from .models import StoredFile
+    try:
+        f = StoredFile.objects.get(name=name)
+        data = base64.b64decode(f.data)
+        resp = HttpResponse(data, content_type=f.content_type)
+        resp["Cache-Control"] = "public, max-age=604800"
+        return resp
+    except StoredFile.DoesNotExist:
+        return HttpResponse(status=404)
+
+
 def gif_proxy(request):
     """Proxy WorkoutX GIF so the API key never leaves the server and CORS is avoided."""
     from workoutx import WorkoutX

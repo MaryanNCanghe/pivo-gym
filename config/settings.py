@@ -108,7 +108,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 STORAGES = {
     "default": {
-        "BACKEND": "fitness.storage.VercelBlobStorage",
+        "BACKEND": "fitness.storage.DatabaseStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
