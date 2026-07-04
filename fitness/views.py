@@ -873,6 +873,54 @@ def search_exercises(request):
     return JsonResponse({"items": items, "count": len(items)})
 
 
+def pwa_manifest(request):
+    manifest = {
+        "name": "PIVO Fitness",
+        "short_name": "PIVO",
+        "description": "Your personal fitness companion",
+        "start_url": "/",
+        "display": "standalone",
+        "background_color": "#faf9f7",
+        "theme_color": "#e91e8c",
+        "orientation": "portrait-primary",
+        "icons": [
+            {"src": "/static/images/icon-192.png", "sizes": "192x192", "type": "image/png"},
+            {"src": "/static/images/icon-512.png", "sizes": "512x512", "type": "image/png"},
+            {"src": "/static/images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+        ],
+    }
+    return JsonResponse(manifest)
+
+
+def pwa_sw(request):
+    sw = """
+const CACHE = 'pivo-v1';
+const PRECACHE = ['/', '/static/css/pivo.css', '/static/js/script.js'];
+
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(clients.claim());
+});
+
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+  e.respondWith(
+    fetch(e.request)
+      .then(resp => {
+        const clone = resp.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+        return resp;
+      })
+      .catch(() => caches.match(e.request))
+  );
+});
+""".strip()
+    return HttpResponse(sw, content_type="application/javascript")
+
+
 def serve_stored_file(request, name):
     """Serve a file stored as base64 in the database."""
     import base64

@@ -65,6 +65,8 @@ urlpatterns = [
     path("api/workouts/weekly-summary/", views.api_weekly_summary, name="api_weekly_summary"),
     path("api/workouts/update/<int:id>/", views.api_update_workout, name="api_update_workout"),
 
+    path("manifest.json", views.pwa_manifest, name="pwa_manifest"),
+    path("sw.js", views.pwa_sw, name="pwa_sw"),
     path("media/db/<str:name>", views.serve_stored_file, name="serve_stored_file"),
     path("api/exercises/search/", views.search_exercises, name="search_exercises"),
     path("api/exercises/gif/", views.gif_proxy, name="gif_proxy"),
