@@ -14,3 +14,11 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 application = get_wsgi_application()
+
+# Run any pending migrations on cold start (Vercel has no persistent filesystem
+# so we can't rely on buildCommand having DB access during the build phase).
+try:
+    from django.core.management import call_command
+    call_command('migrate', '--noinput', verbosity=0)
+except Exception:
+    pass
