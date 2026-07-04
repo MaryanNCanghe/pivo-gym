@@ -38,9 +38,9 @@
     </div>
     <div style="position:relative;padding-bottom:56.25%;height:0;">
       <iframe id="vidIframe" src="" frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
-              style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+              style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>
     </div>
     <div id="vidModalMeta" style="padding:.75rem 1rem 1rem;font-size:.82rem;color:var(--muted);"></div>
   </div>
@@ -109,7 +109,7 @@ function renderVideos(cat) {
 
 function openVideo(id, title, sub, duration, level) {
   document.getElementById("vidModalTitle").textContent = title;
-  document.getElementById("vidIframe").src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+  document.getElementById("vidIframe").src = `https://www.youtube-nocookie.com/embed/${id}?rel=0&playsinline=1&autoplay=1`;
   document.getElementById("vidModalMeta").textContent = `${duration}  ·  ${level}  ·  ${sub}`;
   const modal = document.getElementById("vidModal");
   modal.style.display = "flex";
