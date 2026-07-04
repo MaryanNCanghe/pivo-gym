@@ -840,19 +840,21 @@ def search_exercises(request):
     if not qs.exists():
         return JsonResponse({"items": [], "count": 0, "seeded": CustomExercise.objects.exists()})
 
-    items = [
-        {
+    items = []
+    for ex in qs:
+        url = ex.gif_url or ex.image_url
+        url2 = url.replace("/0.jpg", "/1.jpg") if url and "/0.jpg" in url else url
+        items.append({
             "id": f"db_{ex.id}",
             "name": ex.name,
             "category": ex.body_part,
-            "url": ex.gif_url or ex.image_url,
+            "url": url,
+            "url2": url2,
             "equipment": ex.equipment,
             "target": ex.target,
             "instructions": ex.instructions,
             "level": ex.level,
-        }
-        for ex in qs
-    ]
+        })
     return JsonResponse({"items": items, "count": len(items)})
 
 

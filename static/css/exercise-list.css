@@ -278,24 +278,6 @@
   box-shadow: 0 2px 12px rgba(0,0,0,.08);
 }
 
-.ex-yt-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-  width: 100%;
-  padding: .75rem 1rem;
-  border-radius: 12px;
-  background: #ff0000;
-  color: #fff;
-  font-weight: 700;
-  font-size: .9rem;
-  text-decoration: none;
-  margin-bottom: 1rem;
-  transition: opacity .15s;
-}
-
-.ex-yt-btn:hover { opacity: .85; color: #fff; }
 
 .ex-steps-label {
   font-size: .72rem;
