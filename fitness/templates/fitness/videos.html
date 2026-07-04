@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}Video Library | PIVO{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/videos.css' %}">
+{% endblock %}
+
+{% block body %}
+
+<div class="vid-header">
+  <h1 class="card-title">Video Library</h1>
+  <p class="text-muted-pivo">Curated workouts for women</p>
+</div>
+
+<!-- Category filters -->
+<div class="vid-filters" id="vidFilters">
+  <button class="vid-filter-btn active" data-cat="all">All</button>
+  <button class="vid-filter-btn" data-cat="full-body">Full Body</button>
+  <button class="vid-filter-btn" data-cat="glutes">Glutes &amp; Legs</button>
+  <button class="vid-filter-btn" data-cat="core">Core</button>
+  <button class="vid-filter-btn" data-cat="upper">Upper Body</button>
+  <button class="vid-filter-btn" data-cat="hiit">HIIT</button>
+  <button class="vid-filter-btn" data-cat="yoga">Yoga &amp; Pilates</button>
+  <button class="vid-filter-btn" data-cat="stretch">Stretching</button>
+</div>
+
+<!-- Video grid -->
+<div class="vid-grid" id="vidGrid"></div>
+
+<!-- Player modal -->
+<div id="vidModal" hidden style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9000;
+     display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:1rem;">
+  <div style="background:#fff;border-radius:16px;width:100%;max-width:560px;margin:auto;overflow:hidden;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.65rem 1rem;">
+      <span id="vidModalTitle" style="font-weight:700;font-size:.95rem;color:var(--pebble);"></span>
+      <button onclick="closeVidModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;">&times;</button>
+    </div>
+    <div style="position:relative;padding-bottom:56.25%;height:0;">
+      <iframe id="vidIframe" src="" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+    </div>
+    <div id="vidModalMeta" style="padding:.75rem 1rem 1rem;font-size:.82rem;color:var(--muted);"></div>
+  </div>
+</div>
+
+<script>
+const VIDEOS = [
+  // ── Full Body ──────────────────────────────────────────────────
+  { id:"UItWltVZglo", cat:"full-body", title:"30-Min Full Body Workout", sub:"No equipment · Beginner friendly", level:"Beginner", duration:"30 min" },
+  { id:"ml6cT4AZdqI", cat:"full-body", title:"20-Min Full Body HIIT", sub:"No equipment · Burn calories", level:"Intermediate", duration:"20 min" },
+  { id:"cbKkB3POqaY", cat:"full-body", title:"45-Min Strength Full Body", sub:"Dumbbells · Total body tone", level:"Intermediate", duration:"45 min" },
+  { id:"6Hlp_PaXKJk", cat:"full-body", title:"10-Min Morning Workout", sub:"No equipment · Energize your day", level:"Beginner", duration:"10 min" },
+
+  // ── Glutes & Legs ──────────────────────────────────────────────
+  { id:"2pLT-olgUJs", cat:"glutes", title:"30-Min Booty Workout", sub:"Resistance band optional · Glute focus", level:"Intermediate", duration:"30 min" },
+  { id:"ySbgRSGI0_A", cat:"glutes", title:"20-Min Leg Day for Women", sub:"No equipment · Thighs & glutes", level:"Beginner", duration:"20 min" },
+  { id:"Fob4oEuBhSo", cat:"glutes", title:"Glute & Hamstring Workout", sub:"Dumbbells · Lift & tone", level:"Intermediate", duration:"25 min" },
+  { id:"jMEpBw_gJLY", cat:"glutes", title:"Inner Thigh & Glutes", sub:"No equipment · Standing exercises", level:"Beginner", duration:"15 min" },
+
+  // ── Core ────────────────────────────────────────────────────────
+  { id:"AnYl6Nk9GOA", cat:"core", title:"10-Min Ab Workout for Women", sub:"No equipment · Flat tummy focus", level:"Beginner", duration:"10 min" },
+  { id:"1919eTCoESo", cat:"core", title:"15-Min Pilates Core", sub:"Mat only · Deep core activation", level:"Beginner", duration:"15 min" },
+  { id:"wn-SK7oNpsc", cat:"core", title:"20-Min Core & Obliques", sub:"No equipment · Waist sculpt", level:"Intermediate", duration:"20 min" },
+
+  // ── Upper Body ─────────────────────────────────────────────────
+  { id:"IODxDxX7oi4", cat:"upper", title:"15-Min Arms & Shoulders", sub:"Light dumbbells · Tone & define", level:"Beginner", duration:"15 min" },
+  { id:"S2wLoONSPy8", cat:"upper", title:"20-Min Upper Body Strength", sub:"Dumbbells · Chest, back, arms", level:"Intermediate", duration:"20 min" },
+
+  // ── HIIT ────────────────────────────────────────────────────────
+  { id:"TkaYafQ-XC4", cat:"hiit", title:"20-Min HIIT for Women", sub:"No equipment · High burn", level:"Intermediate", duration:"20 min" },
+  { id:"e9iHGubInWk", cat:"hiit", title:"30-Min Cardio HIIT Dance", sub:"No equipment · Fun cardio", level:"Beginner", duration:"30 min" },
+  { id:"cZnsLVArIt8", cat:"hiit", title:"15-Min Low Impact HIIT", sub:"No jumping · Joint friendly", level:"Beginner", duration:"15 min" },
+
+  // ── Yoga & Pilates ─────────────────────────────────────────────
+  { id:"v7AYKMP6rOE", cat:"yoga", title:"20-Min Morning Yoga", sub:"Full body wake-up", level:"All levels", duration:"20 min" },
+  { id:"b1H3xO3x_Js", cat:"yoga", title:"30-Min Pilates for Women", sub:"Mat · Core, flexibility & posture", level:"Beginner", duration:"30 min" },
+  { id:"qHFOHJ9jJo4", cat:"yoga", title:"Yoga for Flexibility", sub:"Hip & spine mobility", level:"All levels", duration:"25 min" },
+
+  // ── Stretching ─────────────────────────────────────────────────
+  { id:"L_xrDAtykMI", cat:"stretch", title:"10-Min Full Body Stretch", sub:"Post-workout recovery", level:"All levels", duration:"10 min" },
+  { id:"RqcOCBb4arc", cat:"stretch", title:"15-Min Hip & Lower Back", sub:"Relieve tension · Daily mobility", level:"All levels", duration:"15 min" },
+];
+
+const levelColor = { Beginner:"#4caf50", Intermediate:"#ff9800", "All levels":"#9c27b0" };
+
+function renderVideos(cat) {
+  const grid = document.getElementById("vidGrid");
+  const list = cat === "all" ? VIDEOS : VIDEOS.filter(v => v.cat === cat);
+  grid.innerHTML = list.map(v => `
+    <div class="vid-card" onclick="openVideo('${v.id}','${v.title.replace(/'/g,"\\'")}','${v.sub.replace(/'/g,"\\'")}','${v.duration}','${v.level}')">
+      <div class="vid-thumb">
+        <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="${v.title}" loading="lazy">
+        <div class="vid-play-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <span class="vid-duration">${v.duration}</span>
+      </div>
+      <div class="vid-info">
+        <div class="vid-title">${v.title}</div>
+        <div class="vid-sub">${v.sub}</div>
+        <span class="vid-level" style="background:${levelColor[v.level] || '#888'};">${v.level}</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+function openVideo(id, title, sub, duration, level) {
+  document.getElementById("vidModalTitle").textContent = title;
+  document.getElementById("vidIframe").src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+  document.getElementById("vidModalMeta").textContent = `${duration}  ·  ${level}  ·  ${sub}`;
+  const modal = document.getElementById("vidModal");
+  modal.style.display = "flex";
+  modal.hidden = false;
+}
+
+function closeVidModal() {
+  document.getElementById("vidIframe").src = "";
+  const modal = document.getElementById("vidModal");
+  modal.style.display = "none";
+  modal.hidden = true;
+}
+
+document.getElementById("vidModal").addEventListener("click", function(e) {
+  if (e.target === this) closeVidModal();
+});
+
+document.getElementById("vidFilters").addEventListener("click", e => {
+  const btn = e.target.closest(".vid-filter-btn");
+  if (!btn) return;
+  document.querySelectorAll(".vid-filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  renderVideos(btn.dataset.cat);
+});
+
+renderVideos("all");
+</script>
+
+{% endblock %}

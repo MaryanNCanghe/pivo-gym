@@ -1,0 +1,121 @@
+.vid-header { margin-bottom: 1.25rem; }
+
+.vid-filters {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.vid-filter-btn {
+  padding: .35rem .9rem;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--pebble);
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  white-space: nowrap;
+}
+
+.vid-filter-btn.active,
+.vid-filter-btn:hover {
+  background: var(--olive);
+  color: #fff;
+  border-color: var(--olive);
+}
+
+.vid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.vid-card {
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+}
+
+.vid-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover, 0 6px 20px rgba(0,0,0,.1));
+}
+
+.vid-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #111;
+}
+
+.vid-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vid-play-btn {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.3);
+  opacity: 0;
+  transition: opacity .15s;
+}
+
+.vid-card:hover .vid-play-btn { opacity: 1; }
+
+.vid-duration {
+  position: absolute;
+  bottom: .35rem;
+  right: .45rem;
+  background: rgba(0,0,0,.75);
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 700;
+  padding: .1rem .4rem;
+  border-radius: 4px;
+}
+
+.vid-info {
+  padding: .6rem .75rem .75rem;
+}
+
+.vid-title {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--pebble);
+  line-height: 1.3;
+  margin-bottom: .2rem;
+}
+
+.vid-sub {
+  font-size: .73rem;
+  color: var(--muted);
+  margin-bottom: .4rem;
+  line-height: 1.3;
+}
+
+.vid-level {
+  display: inline-block;
+  color: #fff;
+  font-size: .65rem;
+  font-weight: 700;
+  padding: .1rem .5rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+@media (max-width: 400px) {
+  .vid-grid { grid-template-columns: repeat(2, 1fr); gap: .65rem; }
+}

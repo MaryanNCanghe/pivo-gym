@@ -249,6 +249,10 @@ def privacy(request: HttpRequest) -> HttpResponse:
     return render(request, "fitness/privacy.html")
 
 @login_required
+def videos(request: HttpRequest) -> HttpResponse:
+    return render(request, "fitness/videos.html")
+
+@login_required
 @require_GET
 def meal_search(request: HttpRequest) -> JsonResponse:
     if requests is None:

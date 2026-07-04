@@ -1,22 +1,20 @@
 """
-Seed the CustomExercise table from the free-exercise-db open-source dataset.
-Run once on Vercel via `python manage.py seed_exercises` or via wsgi.py on cold start.
+Seed the CustomExercise table from the bundled free-exercise-db dataset.
 
 Dataset: https://github.com/yuhonas/free-exercise-db
 Images:  https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/{id}/{n}.jpg
 """
+import gzip
 import json
-import urllib.request
+import os
 from django.core.management.base import BaseCommand
 
-EXERCISES_JSON_URL = (
-    "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json"
-)
 IMAGE_BASE = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises"
+FIXTURE = os.path.join(os.path.dirname(__file__), "..", "..", "fixtures", "exercises.json.gz")
 
 
 class Command(BaseCommand):
-    help = "Seed exercises from free-exercise-db (idempotent)"
+    help = "Seed exercises from bundled fixture (idempotent)"
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -32,12 +30,11 @@ class Command(BaseCommand):
             self.stdout.write("Exercises already seeded. Use --force to re-seed.")
             return
 
-        self.stdout.write("Downloading exercise data...")
         try:
-            with urllib.request.urlopen(EXERCISES_JSON_URL, timeout=30) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
+            with gzip.open(FIXTURE, "rb") as f:
+                data = json.loads(f.read().decode("utf-8"))
         except Exception as e:
-            self.stderr.write(f"Failed to download exercises: {e}")
+            self.stderr.write(f"Failed to load exercise fixture: {e}")
             return
 
         self.stdout.write(f"Importing {len(data)} exercises...")
