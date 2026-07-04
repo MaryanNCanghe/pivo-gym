@@ -17,18 +17,18 @@ class Command(BaseCommand):
     help = "Seed exercises from bundled fixture (idempotent)"
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "--force",
-            action="store_true",
-            help="Re-seed even if exercises already exist",
-        )
+        parser.add_argument("--force", action="store_true", help="Re-seed even if exercises already exist")
 
     def handle(self, *args, **options):
         from fitness.models import CustomExercise
 
         if not options["force"] and CustomExercise.objects.exists():
-            self.stdout.write("Exercises already seeded. Use --force to re-seed.")
-            return
+            # Auto-fix: if all exercises have empty target it means the camelCase bug hit them
+            needs_fix = not CustomExercise.objects.exclude(target="").exists()
+            if not needs_fix:
+                self.stdout.write("Exercises already seeded.")
+                return
+            self.stdout.write("Reseeding to fix muscle target data...")
 
         try:
             with gzip.open(FIXTURE, "rb") as f:
@@ -38,44 +38,44 @@ class Command(BaseCommand):
             return
 
         self.stdout.write(f"Importing {len(data)} exercises...")
-        created = updated = 0
 
+        objs = []
         for ex in data:
             ex_id = ex.get("id", "")
+            if not ex_id:
+                continue
             images = ex.get("images", [])
             image_url = f"{IMAGE_BASE}/{images[0]}" if images else ""
-            gif_url = f"{IMAGE_BASE}/{images[0]}" if images else ""
-
-            primary = ex.get("primary_muscles", [])
-            secondary = ex.get("secondary_muscles", [])
-            target = primary[0] if primary else ""
+            # primaryMuscles is camelCase in the free-exercise-db JSON
+            primary = ex.get("primaryMuscles") or []
+            secondary = ex.get("secondaryMuscles") or []
             body_part = ex.get("category", "")
 
-            defaults = {
-                "name": ex.get("name", ""),
-                "body_part": body_part,
-                "equipment": ex.get("equipment", ""),
-                "target": target,
-                "secondary_muscles": secondary,
-                "instructions": ex.get("instructions", []),
-                "image_url": image_url,
-                "gif_url": gif_url,
-                "level": ex.get("level", ""),
-                "force": ex.get("force") or "",
-                "mechanic": ex.get("mechanic") or "",
-                "category": body_part,
-            }
+            objs.append(CustomExercise(
+                external_id=ex_id,
+                name=ex.get("name", ""),
+                body_part=body_part,
+                equipment=ex.get("equipment", ""),
+                target=primary[0] if primary else "",
+                secondary_muscles=secondary,
+                instructions=ex.get("instructions", []),
+                image_url=image_url,
+                gif_url=image_url,
+                level=ex.get("level", ""),
+                force=ex.get("force") or "",
+                mechanic=ex.get("mechanic") or "",
+                category=body_part,
+            ))
 
-            _, is_new = CustomExercise.objects.update_or_create(
-                external_id=ex_id, defaults=defaults
-            )
-            if is_new:
-                created += 1
-            else:
-                updated += 1
-
-        self.stdout.write(
-            self.style.SUCCESS(
-                f"Done — {created} created, {updated} updated."
-            )
+        # Single bulk query instead of 873 individual ones — runs in <1s vs ~20s
+        CustomExercise.objects.bulk_create(
+            objs,
+            update_conflicts=True,
+            update_fields=[
+                "name", "body_part", "equipment", "target", "secondary_muscles",
+                "instructions", "image_url", "gif_url", "level", "force", "mechanic", "category",
+            ],
+            unique_fields=["external_id"],
         )
+
+        self.stdout.write(self.style.SUCCESS(f"Done — {len(objs)} exercises seeded."))

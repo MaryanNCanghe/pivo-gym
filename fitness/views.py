@@ -824,21 +824,28 @@ def search_exercises(request):
     equipment = request.GET.get("equipment", "").strip().lower()
     limit = min(int(request.GET.get("limit", "20")), 100)
 
+    if not CustomExercise.objects.exists():
+        return JsonResponse({"items": [], "count": 0, "seeded": False})
+
     qs = CustomExercise.objects.all()
+
     if q:
-        qs = qs.filter(name__icontains=q)
+        qs = qs.filter(
+            Q(name__icontains=q) |
+            Q(target__icontains=q) |
+            Q(body_part__icontains=q) |
+            Q(category__icontains=q)
+        )
     if body_part:
-        qs = qs.filter(Q(body_part__icontains=body_part) | Q(category__icontains=body_part))
+        qs = qs.filter(
+            Q(target__icontains=body_part) |
+            Q(body_part__icontains=body_part) |
+            Q(category__icontains=body_part)
+        )
     if equipment:
         qs = qs.filter(equipment__icontains=equipment)
 
-    if not q and not body_part and not equipment:
-        qs = qs.order_by('name')
-
-    qs = qs[:limit]
-
-    if not qs.exists():
-        return JsonResponse({"items": [], "count": 0, "seeded": CustomExercise.objects.exists()})
+    qs = qs.order_by('name')[:limit]
 
     items = []
     for ex in qs:
@@ -847,7 +854,7 @@ def search_exercises(request):
         items.append({
             "id": f"db_{ex.id}",
             "name": ex.name,
-            "category": ex.body_part,
+            "category": ex.target or ex.body_part,
             "url": url,
             "url2": url2,
             "equipment": ex.equipment,
@@ -855,6 +862,10 @@ def search_exercises(request):
             "instructions": ex.instructions,
             "level": ex.level,
         })
+
+    if not items:
+        return JsonResponse({"items": [], "count": 0, "seeded": True})
+
     return JsonResponse({"items": items, "count": len(items)})
 
 
