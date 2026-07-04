@@ -49,39 +49,39 @@
 <script>
 const VIDEOS = [
   // ── Full Body ──────────────────────────────────────────────────
-  { id:"UItWltVZglo", cat:"full-body", title:"30-Min Full Body Workout", sub:"No equipment · Beginner friendly", level:"Beginner", duration:"30 min" },
-  { id:"ml6cT4AZdqI", cat:"full-body", title:"20-Min Full Body HIIT", sub:"No equipment · Burn calories", level:"Intermediate", duration:"20 min" },
-  { id:"cbKkB3POqaY", cat:"full-body", title:"45-Min Strength Full Body", sub:"Dumbbells · Total body tone", level:"Intermediate", duration:"45 min" },
-  { id:"6Hlp_PaXKJk", cat:"full-body", title:"10-Min Morning Workout", sub:"No equipment · Energize your day", level:"Beginner", duration:"10 min" },
+  { id:"azF7RsPXB2k", cat:"full-body", title:"Full Body Workout – No Equipment", sub:"No equipment · Strength & cardio", level:"Intermediate", duration:"40 min" },
+  { id:"Emu7uB59E2g", cat:"full-body", title:"30 Min Full Body HIIT", sub:"No equipment · High-intensity intervals", level:"Intermediate", duration:"30 min" },
+  { id:"aFBRopKNGfw", cat:"full-body", title:"Low Impact Full Body HIIT", sub:"No equipment · No jumping, apartment-friendly", level:"Beginner", duration:"30 min" },
+  { id:"Ghiu6mvEb-Y", cat:"full-body", title:"30 Min No Equipment Full Body", sub:"No equipment · All fitness levels", level:"All levels", duration:"30 min" },
 
   // ── Glutes & Legs ──────────────────────────────────────────────
-  { id:"2pLT-olgUJs", cat:"glutes", title:"30-Min Booty Workout", sub:"Resistance band optional · Glute focus", level:"Intermediate", duration:"30 min" },
-  { id:"ySbgRSGI0_A", cat:"glutes", title:"20-Min Leg Day for Women", sub:"No equipment · Thighs & glutes", level:"Beginner", duration:"20 min" },
-  { id:"Fob4oEuBhSo", cat:"glutes", title:"Glute & Hamstring Workout", sub:"Dumbbells · Lift & tone", level:"Intermediate", duration:"25 min" },
-  { id:"jMEpBw_gJLY", cat:"glutes", title:"Inner Thigh & Glutes", sub:"No equipment · Standing exercises", level:"Beginner", duration:"15 min" },
+  { id:"8W7U_XT_Pa0", cat:"glutes", title:"15 Min Targeted Glute Workout", sub:"Dumbbells · Glute activation & burn", level:"Intermediate", duration:"15 min" },
+  { id:"2Qd-LJNJYWA", cat:"glutes", title:"30 Min Glute & Lower Body", sub:"Dumbbells · Glutes, hamstrings & quads", level:"Intermediate", duration:"30 min" },
+  { id:"ZZI__bqlBkQ", cat:"glutes", title:"20 Min Dumbbell Leg Workout", sub:"Dumbbells · Squats & Romanian deadlifts", level:"Intermediate", duration:"20 min" },
 
   // ── Core ────────────────────────────────────────────────────────
-  { id:"AnYl6Nk9GOA", cat:"core", title:"10-Min Ab Workout for Women", sub:"No equipment · Flat tummy focus", level:"Beginner", duration:"10 min" },
-  { id:"1919eTCoESo", cat:"core", title:"15-Min Pilates Core", sub:"Mat only · Deep core activation", level:"Beginner", duration:"15 min" },
-  { id:"wn-SK7oNpsc", cat:"core", title:"20-Min Core & Obliques", sub:"No equipment · Waist sculpt", level:"Intermediate", duration:"20 min" },
+  { id:"zp8WhHeuJws", cat:"core", title:"Complete Core Pilates Workout", sub:"No equipment · Full core pilates", level:"All levels", duration:"20 min" },
+  { id:"BHiXrSyQl0w", cat:"core", title:"Core & Waist Tightening", sub:"No equipment · Abs, obliques & lower core", level:"Beginner", duration:"15 min" },
+  { id:"LGHF-cp1l2o", cat:"core", title:"Pilates Core Routine", sub:"No equipment · Pilates-style core burn", level:"All levels", duration:"12 min" },
 
   // ── Upper Body ─────────────────────────────────────────────────
-  { id:"IODxDxX7oi4", cat:"upper", title:"15-Min Arms & Shoulders", sub:"Light dumbbells · Tone & define", level:"Beginner", duration:"15 min" },
-  { id:"S2wLoONSPy8", cat:"upper", title:"20-Min Upper Body Strength", sub:"Dumbbells · Chest, back, arms", level:"Intermediate", duration:"20 min" },
+  { id:"k3MCRVbdKG0", cat:"upper", title:"20 Min Arms, Shoulders & Core", sub:"Light weights optional · Upper body sculpt", level:"Intermediate", duration:"20 min" },
+  { id:"GPoidnR6Ngs", cat:"upper", title:"30 Min Upper Body & Abs Sculpt", sub:"Light weights optional · Full upper body + abs", level:"Intermediate", duration:"30 min" },
 
   // ── HIIT ────────────────────────────────────────────────────────
-  { id:"TkaYafQ-XC4", cat:"hiit", title:"20-Min HIIT for Women", sub:"No equipment · High burn", level:"Intermediate", duration:"20 min" },
-  { id:"e9iHGubInWk", cat:"hiit", title:"30-Min Cardio HIIT Dance", sub:"No equipment · Fun cardio", level:"Beginner", duration:"30 min" },
-  { id:"cZnsLVArIt8", cat:"hiit", title:"15-Min Low Impact HIIT", sub:"No jumping · Joint friendly", level:"Beginner", duration:"15 min" },
+  { id:"LI9yb8HRkRo", cat:"hiit", title:"30 Min Low Impact HIIT", sub:"No equipment · Fat-burning intervals", level:"All levels", duration:"30 min" },
+  { id:"bZffvaBeD7s", cat:"hiit", title:"15 Min Low Impact HIIT", sub:"No equipment · No jumping, no noise", level:"Beginner", duration:"15 min" },
+  { id:"xAD2OHQqtpQ", cat:"hiit", title:"Low Impact Cardio HIIT", sub:"No equipment · Zero jumping cardio blast", level:"Beginner", duration:"20 min" },
 
   // ── Yoga & Pilates ─────────────────────────────────────────────
-  { id:"v7AYKMP6rOE", cat:"yoga", title:"20-Min Morning Yoga", sub:"Full body wake-up", level:"All levels", duration:"20 min" },
-  { id:"b1H3xO3x_Js", cat:"yoga", title:"30-Min Pilates for Women", sub:"Mat · Core, flexibility & posture", level:"Beginner", duration:"30 min" },
-  { id:"qHFOHJ9jJo4", cat:"yoga", title:"Yoga for Flexibility", sub:"Hip & spine mobility", level:"All levels", duration:"25 min" },
+  { id:"v7AYKMP6rOE", cat:"yoga", title:"Yoga For Complete Beginners", sub:"No equipment · Perfect starting point", level:"Beginner", duration:"20 min" },
+  { id:"AB3Y-4a3ZrU", cat:"yoga", title:"30 Min Yoga For Beginners", sub:"No equipment · Foundation poses & slow flow", level:"Beginner", duration:"30 min" },
+  { id:"oMOgnSMcfM0", cat:"yoga", title:"Yoga for Core & Booty", sub:"No equipment · Core & glute vinyasa flow", level:"All levels", duration:"30 min" },
 
   // ── Stretching ─────────────────────────────────────────────────
-  { id:"L_xrDAtykMI", cat:"stretch", title:"10-Min Full Body Stretch", sub:"Post-workout recovery", level:"All levels", duration:"10 min" },
-  { id:"RqcOCBb4arc", cat:"stretch", title:"15-Min Hip & Lower Back", sub:"Relieve tension · Daily mobility", level:"All levels", duration:"15 min" },
+  { id:"lxuTCHJSers", cat:"stretch", title:"10 Min Full Body Stretch", sub:"No equipment · Head-to-toe tension release", level:"All levels", duration:"10 min" },
+  { id:"Yzm3fA2HhkQ", cat:"stretch", title:"Yoga For Flexibility", sub:"No equipment · Open & lengthen tight muscles", level:"All levels", duration:"16 min" },
+  { id:"3NtNAQodk8E", cat:"stretch", title:"Yoga Rinse", sub:"No equipment · 15 min refresh & reset", level:"All levels", duration:"15 min" },
 ];
 
 const levelColor = { Beginner:"#4caf50", Intermediate:"#ff9800", "All levels":"#9c27b0" };
