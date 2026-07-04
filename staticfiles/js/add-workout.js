@@ -20,24 +20,38 @@ async function searchExercises(q) {
 function renderSearchResults(items) {
   const container = document.getElementById("exercise-results");
 
-  container.innerHTML = items.map(ex => `
-    <div>
-      <div class="exercise-card">
+  if (!items.length) {
+    container.innerHTML = `<p style="color:var(--muted);font-size:.85rem;padding:.5rem 0;">No results found.</p>`;
+    return;
+  }
 
-        <div class="exercise-media">
-          ${renderMedia(ex.url)}
-        </div>
-
-        <button class="add-btn"
-          onclick='addExercise(${JSON.stringify(ex).replace(/"/g, "&quot;")})'>
-          +
+  container.innerHTML = `<ul class="ex-result-list">${items.map((ex, i) => `
+    <li class="ex-result-item" data-index="${i}">
+      <span class="ex-result-name">${ex.name}</span>
+      <div class="ex-result-actions">
+        <button class="ex-preview-btn" onclick='togglePreview(${i})' title="Preview">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/></svg>
         </button>
-
-        <h6>${ex.name}</h6>
-
+        <button class="ex-add-btn" onclick='addExercise(${JSON.stringify(ex).replace(/"/g, "&quot;")})'>Add</button>
       </div>
-    </div>
-  `).join("");
+    </li>
+    <li class="ex-preview-row hidden" id="preview-${i}">
+      <div class="ex-preview-media">${ex.url ? `<img src="${ex.url}" alt="${ex.name}">` : '<span style="color:var(--muted);font-size:.8rem;">No preview</span>'}</div>
+      <div class="ex-preview-tags">
+        ${ex.category ? `<span>${ex.category}</span>` : ""}
+        ${ex.target ? `<span>${ex.target}</span>` : ""}
+        ${ex.equipment ? `<span>${ex.equipment}</span>` : ""}
+      </div>
+    </li>
+  `).join("")}</ul>`;
+
+  window._exResults = items;
+}
+
+function togglePreview(index) {
+  const row = document.getElementById(`preview-${index}`);
+  if (!row) return;
+  row.classList.toggle("hidden");
 }
 
 function addExercise(ex) {
@@ -128,14 +142,6 @@ function removeExercise(index) {
   renderSelectedExercises();
 }
 
-
-function renderMedia(url) {
-  if (!url) {
-    return `<div class="text-muted">No preview</div>`;
-  }
-
-  return `<img src="${url}" alt="exercise demo">`;
-}
 
 function openMedia(url) {
   document.getElementById("media-container").innerHTML = renderMedia(url);
