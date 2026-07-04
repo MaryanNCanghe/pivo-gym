@@ -201,9 +201,25 @@ document.addEventListener("DOMContentLoaded", () => {
         img.className = "comm-post-image";
         img.src = post.image;
         img.alt = "Post image";
+        img.style.cursor = "zoom-in";
+        img.addEventListener("click", e => {
+          e.stopPropagation();
+          openImgLightbox(post.image);
+        });
         card.appendChild(img);
       }
     }
+
+    // Tap on post content → open detail modal
+    const tapArea = document.createElement("div");
+    tapArea.className = "comm-tap-hint";
+    tapArea.style.cssText = "font-size:.75rem;color:var(--muted);padding:.25rem 0 .1rem;cursor:pointer;";
+    tapArea.textContent = "View post";
+    tapArea.addEventListener("click", e => {
+      e.stopPropagation();
+      openPostModal(post.id, csrftoken, post);
+    });
+    card.appendChild(tapArea);
 
     // Actions
     const actions = document.createElement("div");
@@ -356,6 +372,122 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   loadMoreBtn.addEventListener("click", () => loadPage(currentPage + 1));
+
+  // ── Image lightbox ──────────────────────────────────────────────
+  function openImgLightbox(src) {
+    const lb = document.getElementById("imgLightbox");
+    document.getElementById("imgLightboxSrc").src = src;
+    lb.style.display = "flex";
+    lb.hidden = false;
+  }
+
+  // ── Post detail modal ───────────────────────────────────────────
+  async function openPostModal(postId, csrf, postSnap) {
+    const modal = document.getElementById("postModal");
+    const content = document.getElementById("postModalContent");
+    content.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);">Loading…</div>';
+    modal.hidden = false;
+
+    try {
+      const commentsRes = await fetch(`/api/posts/${postId}/comments/`);
+      const commentsData = await commentsRes.json();
+      const post = postSnap;
+
+      content.innerHTML = "";
+
+      // Header
+      const hdr = buildPostCard_header(post);
+      content.appendChild(hdr);
+
+      // Content text
+      if (post.content) {
+        const p = document.createElement("div");
+        p.style.cssText = "margin:.6rem 0;font-size:.95rem;";
+        p.textContent = post.content;
+        content.appendChild(p);
+      }
+
+      // Image
+      if (post.image) {
+        const ext = post.image.split(".").pop().toLowerCase();
+        if (["mp4","webm","mov"].includes(ext)) {
+          const v = document.createElement("video");
+          v.src = post.image; v.controls = true;
+          v.style.cssText = "width:100%;border-radius:10px;margin:.5rem 0;";
+          content.appendChild(v);
+        } else {
+          const img = document.createElement("img");
+          img.src = post.image;
+          img.style.cssText = "width:100%;border-radius:10px;margin:.5rem 0;cursor:zoom-in;";
+          img.addEventListener("click", () => openImgLightbox(post.image));
+          content.appendChild(img);
+        }
+      }
+
+      // Divider
+      const hr = document.createElement("hr");
+      hr.style.cssText = "border:none;border-top:1px solid var(--border);margin:.75rem 0;";
+      content.appendChild(hr);
+
+      // Comments
+      const commWrap = document.createElement("div");
+      commentsData.comments.forEach(c => commWrap.appendChild(buildComment(c)));
+      content.appendChild(commWrap);
+
+      // Comment input
+      const inputRow = document.createElement("div");
+      inputRow.className = "comm-comment-input-row";
+      inputRow.style.marginTop = ".5rem";
+      const input = document.createElement("input");
+      input.className = "comm-comment-input";
+      input.placeholder = "Write a comment…";
+      input.type = "text";
+      const sendBtn = document.createElement("button");
+      sendBtn.className = "comm-comment-send";
+      sendBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`;
+      const send = async () => {
+        const text = input.value.trim();
+        if (!text) return;
+        sendBtn.disabled = true;
+        const res = await fetch(`/api/posts/${postId}/comments/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-CSRFToken": csrf },
+          body: JSON.stringify({ content: text }),
+        });
+        const d = await res.json();
+        if (d.ok) { input.value = ""; inputRow.before(buildComment(d.comment)); }
+        sendBtn.disabled = false;
+      };
+      sendBtn.addEventListener("click", send);
+      input.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); send(); } });
+      inputRow.appendChild(input);
+      inputRow.appendChild(sendBtn);
+      content.appendChild(inputRow);
+
+    } catch {
+      content.innerHTML = '<p style="padding:1rem;color:var(--muted);">Failed to load post.</p>';
+    }
+  }
+
+  function buildPostCard_header(post) {
+    const hdr = document.createElement("div");
+    hdr.className = "comm-post-header";
+    hdr.style.marginBottom = ".4rem";
+    hdr.appendChild(buildAvatar(post.user));
+    const meta = document.createElement("div");
+    meta.className = "comm-post-meta";
+    meta.innerHTML = `
+      <div class="comm-post-username">${esc(post.user.username)}</div>
+      <div class="comm-post-time">${esc(post.time_ago)}</div>
+    `;
+    hdr.appendChild(meta);
+    return hdr;
+  }
+
+  // Close post modal on backdrop click
+  document.getElementById("postModal")?.addEventListener("click", function(e) {
+    if (e.target === this) this.hidden = true;
+  });
 
   loadPage(1);
 
