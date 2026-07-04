@@ -127,6 +127,17 @@
 {% endif %}
 
 <main class="container py-4 main-with-bottom-nav">
+  {% if messages %}
+    <style>
+      .msg-error{padding:.7rem 1rem;border-radius:12px;font-size:.85rem;font-weight:600;margin-bottom:.4rem;background:#fdecea;color:#c0392b;border:1px solid #f5c6cb;}
+      .msg-success{padding:.7rem 1rem;border-radius:12px;font-size:.85rem;font-weight:600;margin-bottom:.4rem;background:#edf7ed;color:#2e7d32;border:1px solid #c3e6cb;}
+    </style>
+    <div style="margin-bottom:1rem;">
+      {% for message in messages %}
+        <div class="{% if message.tags == 'error' %}msg-error{% else %}msg-success{% endif %}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
   <div class="section">
     {% block body %}{% endblock %}
   </div>

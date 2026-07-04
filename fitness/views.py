@@ -91,9 +91,9 @@ def upload_avatar(request: HttpRequest) -> HttpResponse:
                 prof.avatar.delete(save=False)
             prof.avatar = avatar_file
             prof.save()
-        except (EnvironmentError, Exception) as e:
+        except Exception as e:
             from django.contrib import messages
-            messages.error(request, "Photo upload is not configured yet. Please contact the admin.")
+            messages.error(request, f"Upload failed: {e}")
     return redirect("profile")
 
 @login_required
@@ -108,9 +108,9 @@ def upload_progress_photo(request: HttpRequest) -> HttpResponse:
                 photo=photo_file,
                 note=request.POST.get("note", "").strip(),
             )
-        except (EnvironmentError, Exception) as e:
+        except Exception as e:
             from django.contrib import messages
-            messages.error(request, "Photo upload is not configured yet. Please contact the admin.")
+            messages.error(request, f"Upload failed: {e}")
     return redirect("profile")
 
 @login_required
