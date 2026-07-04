@@ -297,3 +297,31 @@ a:hover { color: var(--fern); }
     padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px) + 1rem);
   }
 }
+
+/* =========================
+   SIDEBAR MENU LINKS
+   ========================= */
+
+.pivo-menu-link {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .6rem .75rem;
+  border-radius: 10px;
+  color: var(--pebble);
+  font-weight: 600;
+  font-size: .95rem;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+
+.pivo-menu-link:hover,
+.pivo-menu-link:focus {
+  background: var(--oat);
+  color: var(--olive);
+}
+
+.pivo-menu-link svg {
+  flex-shrink: 0;
+  opacity: .75;
+}
