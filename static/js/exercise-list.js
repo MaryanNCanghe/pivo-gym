@@ -29,7 +29,11 @@ async function loadInitialExercises() {
     const data = await res.json();
 
     const items = Array.isArray(data) ? data : data.items || [];
-    renderExerciseCards(items);
+    if (!items.length && data.seeded === false) {
+      container.innerHTML = '<p style="color:var(--muted);">Exercise library is loading — check back in a minute after the first deploy.</p>';
+    } else {
+      renderExerciseCards(items);
+    }
 
   } catch {
     container.innerHTML = "Failed to load exercises.";
@@ -95,19 +99,25 @@ function renderExerciseCards(items) {
 
 function openExercise(ex) {
   const container = document.getElementById("exercise-full");
+  const steps = Array.isArray(ex.instructions) && ex.instructions.length
+    ? `<ol style="padding-left:1.2rem;margin-top:.75rem;font-size:.85rem;color:var(--pebble);line-height:1.6;">${ex.instructions.map(s => `<li>${s}</li>`).join("")}</ol>`
+    : "";
 
   container.innerHTML = `
-    ${
-      ex.url
-        ? ex.url.endsWith(".mp4")
-          ? `<video controls autoplay>
-               <source src="${ex.url}">
-             </video>`
-          : `<img src="${ex.url}">`
-        : ""
-    }
+    <h5 style="font-weight:700;margin-bottom:.5rem;">${ex.name}</h5>
+    <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.75rem;">
+      ${ex.category ? `<span class="badge">${ex.category}</span>` : ""}
+      ${ex.target ? `<span class="badge">${ex.target}</span>` : ""}
+      ${ex.equipment ? `<span class="badge">${ex.equipment}</span>` : ""}
+      ${ex.level ? `<span class="badge">${ex.level}</span>` : ""}
+    </div>
+    ${ex.url
+      ? ex.url.endsWith(".mp4")
+        ? `<video controls autoplay style="width:100%;border-radius:10px;"><source src="${ex.url}"></video>`
+        : `<img src="${ex.url}" style="width:100%;border-radius:10px;">`
+      : ""}
+    ${steps}
   `;
 
-  document.getElementById("exercise-modal")
-    .classList.remove("hidden");
+  document.getElementById("exercise-modal").classList.remove("hidden");
 }

@@ -628,7 +628,7 @@ def api_save_workout(request):
             category=ex.get("category", ""),
             target=ex.get("target", ""),
             equipment=ex.get("equipment", ""),
-            media_url=(ex.get("media") or {}).get("url", ""),
+            media_url=ex.get("media_url") or (ex.get("media") or {}).get("url", ""),
         )
         for s in ex.get("sets", []):
             ExerciseSet.objects.create(
@@ -812,64 +812,43 @@ def api_update_workout(request, id):
 @require_GET
 @login_required
 def search_exercises(request):
-    try:
-        from workoutx import WorkoutX
-        from workoutx.errors import WorkoutXError
-    except ImportError:
-        return JsonResponse({"items": [], "count": 0, "error": "workoutx-sdk not installed"})
-
-    api_key = os.environ.get("WORKOUTX_API_KEY")
-    if not api_key:
-        return JsonResponse({"items": [], "count": 0, "error": "WORKOUTX_API_KEY not set"})
+    from .models import CustomExercise
+    from django.db.models import Q
 
     q = request.GET.get("q", "").strip()
     body_part = request.GET.get("bodyPart", "").strip().lower()
     equipment = request.GET.get("equipment", "").strip().lower()
     limit = min(int(request.GET.get("limit", "20")), 100)
 
-    try:
-        wx = WorkoutX(api_key=api_key)
+    qs = CustomExercise.objects.all()
+    if q:
+        qs = qs.filter(name__icontains=q)
+    if body_part:
+        qs = qs.filter(Q(body_part__icontains=body_part) | Q(category__icontains=body_part))
+    if equipment:
+        qs = qs.filter(equipment__icontains=equipment)
 
-        if q:
-            raw = wx.exercises.by_name(q, limit=limit)
-            rows = raw if isinstance(raw, list) else raw.get("data", raw.get("exercises", []))
-        elif body_part:
-            raw = wx.exercises.by_body_part(body_part, limit=limit)
-            rows = raw if isinstance(raw, list) else raw.get("data", raw.get("exercises", []))
-        elif equipment:
-            raw = wx.exercises.by_equipment(equipment, limit=limit)
-            rows = raw if isinstance(raw, list) else raw.get("data", raw.get("exercises", []))
-        else:
-            raw = wx.exercises.list(limit=limit)
-            rows = raw if isinstance(raw, list) else raw.get("data", raw.get("exercises", []))
+    if not q and not body_part and not equipment:
+        qs = qs.order_by('name')
 
-        # Secondary client-side filter when name search + equipment are combined
-        if q and equipment:
-            rows = [r for r in rows if (r.get("equipment") or "").lower() == equipment]
-        if q and body_part:
-            rows = [r for r in rows if (r.get("bodyPart") or "").lower() == body_part]
+    qs = qs[:limit]
 
-        items = []
-        for ex in rows[:limit]:
-            ex_id = ex.get("id", "")
-            # gif/gifUrl may not exist — the exercise ID doubles as the GIF filename
-            gif_file = ex.get("gif") or ex.get("gifUrl") or ex.get("gifId") or ex_id
-            gif_url = f"/api/exercises/gif/?f={gif_file}" if gif_file else ""
-            items.append({
-                "id": f"api_{ex_id}",
-                "name": ex.get("name", ""),
-                "category": (ex.get("bodyPart") or "").lower(),
-                "url": gif_url,
-                "equipment": ex.get("equipment", ""),
-                "target": ex.get("target", ""),
-                "_keys": list(ex.keys()),  # debug: shows what fields the API returns
-            })
+    if not qs.exists():
+        return JsonResponse({"items": [], "count": 0, "seeded": CustomExercise.objects.exists()})
 
-    except WorkoutXError as e:
-        return JsonResponse({"items": [], "count": 0, "error": str(e)})
-    except Exception as e:
-        return JsonResponse({"items": [], "count": 0, "error": str(e)})
-
+    items = [
+        {
+            "id": f"db_{ex.id}",
+            "name": ex.name,
+            "category": ex.body_part,
+            "url": ex.gif_url or ex.image_url,
+            "equipment": ex.equipment,
+            "target": ex.target,
+            "instructions": ex.instructions,
+            "level": ex.level,
+        }
+        for ex in qs
+    ]
     return JsonResponse({"items": items, "count": len(items)})
 
 

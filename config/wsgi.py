@@ -15,10 +15,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 application = get_wsgi_application()
 
-# Run any pending migrations on cold start (Vercel has no persistent filesystem
-# so we can't rely on buildCommand having DB access during the build phase).
+# Run pending migrations and seed exercises on cold start.
+# Vercel build phase has no DB access, so we do it here instead.
 try:
     from django.core.management import call_command
     call_command('migrate', '--noinput', verbosity=0)
+    call_command('seed_exercises', verbosity=0)
 except Exception:
     pass
