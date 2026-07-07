@@ -97,6 +97,24 @@ a:hover { color: var(--fern); }
   margin-bottom: 2rem;
 }
 
+/* Photo-backed containers (compound selector so it beats page-specific
+   background rules loaded after this file, regardless of source order) */
+.banner.photo-banner,
+.section.photo-banner {
+  background-image: linear-gradient(rgba(61,21,53,.68), rgba(61,21,53,.68)), var(--photo, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+.banner.photo-banner .banner-title,
+.section.photo-banner h3 { color: #fff; }
+.banner.photo-banner .text-muted-pivo,
+.section.photo-banner .text-muted-pivo,
+.section.photo-banner p { color: rgba(255,255,255,.88); }
+.section.photo-banner a { color: #fff; }
+.section.photo-banner a:hover { color: #fff; }
+
 .card-title {
   font-size: 1.4rem;
   font-weight: 800;
@@ -266,6 +284,8 @@ a:hover { color: var(--fern); }
     height: 60px;
     align-items: stretch;
     padding-bottom: env(safe-area-inset-bottom, 0);
+    padding-left: max(env(safe-area-inset-left, 0px), 14px);
+    padding-right: max(env(safe-area-inset-right, 0px), 14px);
   }
 
   .bottom-nav-item {
@@ -291,6 +311,18 @@ a:hover { color: var(--fern); }
   .bottom-nav-item svg {
     width: 20px;
     height: 20px;
+  }
+
+  .bottom-nav-item span {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height .18s ease, opacity .15s ease;
+  }
+
+  .bottom-nav-item.active span {
+    max-height: 14px;
+    opacity: 1;
   }
 
   .main-with-bottom-nav {

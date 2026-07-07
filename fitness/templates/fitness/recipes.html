@@ -37,10 +37,11 @@
   <div class="recipe-grid mt-3" id="defaultGrid">
     {% for r in default_recipes %}
     <div class="recipe-card" data-goal="{{ r.goal }}" data-meal="{{ r.meal_type }}">
+      {% cycle "https://images.pexels.com/photos/2173774/pexels-photo-2173774.jpeg?auto=compress&cs=tinysrgb&w=480" "https://images.pexels.com/photos/5966437/pexels-photo-5966437.jpeg?auto=compress&cs=tinysrgb&w=480" "https://images.pexels.com/photos/775032/pexels-photo-775032.jpeg?auto=compress&cs=tinysrgb&w=480" "https://images.pexels.com/photos/2907454/pexels-photo-2907454.jpeg?auto=compress&cs=tinysrgb&w=480" as recipe_photo_default silent %}
       {% if r.image %}
         <img src="{{ r.image.url }}" alt="{{ r.name }}">
       {% else %}
-        <div class="recipe-placeholder-img"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f5c6dc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></div>
+        <div class="recipe-placeholder-img" style="--photo:url('{{ recipe_photo_default }}')"></div>
       {% endif %}
       <div class="recipe-card-body">
         <div class="recipe-badges">
@@ -140,10 +141,11 @@
     <div class="recipe-grid mt-3">
       {% for r in user_recipes %}
       <div class="recipe-card" data-goal="{{ r.goal }}" data-meal="{{ r.meal_type }}">
+        {% cycle "https://images.pexels.com/photos/2173774/pexels-photo-2173774.jpeg?auto=compress&cs=tinysrgb&w=480" "https://images.pexels.com/photos/5966437/pexels-photo-5966437.jpeg?auto=compress&cs=tinysrgb&w=480" "https://images.pexels.com/photos/775032/pexels-photo-775032.jpeg?auto=compress&cs=tinysrgb&w=480" "https://images.pexels.com/photos/2907454/pexels-photo-2907454.jpeg?auto=compress&cs=tinysrgb&w=480" as recipe_photo_user silent %}
         {% if r.image %}
           <img src="{{ r.image.url }}" alt="{{ r.name }}">
         {% else %}
-          <div class="recipe-placeholder-img"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f5c6dc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></div>
+          <div class="recipe-placeholder-img" style="--photo:url('{{ recipe_photo_user }}')"></div>
         {% endif %}
         <div class="recipe-card-body">
           <div class="recipe-badges">
